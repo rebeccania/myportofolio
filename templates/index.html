@@ -1,61 +1,320 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rebeccaniaga Napitupulu - Portfolio</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rebecca — Portofolio Mahasiswa Sistem Informasi UI</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <header class="site-header">
-        <div class="container">
-            <a href="#profile" class="brand">Rebeccaniaga Napitupulu</a>
-            <nav>
-                <a href="#profile">Profile</a>
-            </nav>
-        </div>
-    </header>
 
-    <main>
-        <section class="hero" id="profile">
-            <div class="container hero-grid">
-                <div class="hero-identity">
-                    <p class="hero-kicker">Information Systems &middot; Universitas Indonesia</p>
-                    <h1>Rebeccaniaga Napitupulu</h1>
-                </div>
-                <div class="hero-photo">
-                    <div class="photo-block"></div>
-                    <img class="avatar" src="/static/img/Rebeccaniaga.jpeg" alt="Photo of Rebeccaniaga Napitupulu">
-                </div>
-                <div class="hero-details">
-                    <p class="bio">Information Systems student at the Faculty of Computer Science, Universitas Indonesia, currently in my third semester. I’m interested in Product, Data, and Marketing, and passionate about exploring how technology and data can be turned into meaningful solutions. I’m always eager to learn, grow, and build impactful IT solutions for the future.</p>
-                    <dl class="meta-list">
-                        <div class="meta-row">
-                            <dt>NPM</dt>
-                            <dd>2506598394</dd>
-                        </div>
-                        <div class="meta-row">
-                            <dt>Program</dt>
-                            <dd>S1 Sistem Informasi</dd>
-                        </div>
-                    </dl>
-                    <div class="social-links">
-                        <a href="https://github.com/rebeccania" class="social-link">GitHub</a>
-                        <a href="https://www.linkedin.com/in/rebeccaniaga" class="social-link">LinkedIn</a>
-                        <a href="mailto:rebbecaniaga22@gmail.com" class="social-link">Email</a>
-                    </div>
-                </div>
+  <div class="hero-glow"></div>
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="site-header">
+    <div class="container header-inner">
+
+      <a href="#" class="brand">
+        <span class="brand-dot"></span>
+        Rebecca
+      </a>
+
+      <nav class="main-nav">
+        <a href="#home" class="nav-link active">home</a>
+        <a href="#about" class="nav-link">about</a>
+        <a href="#education" class="nav-link">education</a>
+        <a href="#experience" class="nav-link">experience</a>
+      </nav>
+
+      <a href="mailto:rebbecaniaga22@gmail.com" class="btn-hire">Hire Me</a>
+
+    </div>
+  </header>
+
+  <!-- ================= HALAMAN 1: HERO SECTION ================= -->
+  <section id="home" class="hero">
+    <div class="container hero-grid">
+
+      <!-- Kolom Kiri: Informasi & Bio -->
+      <div class="hero-content">
+
+        <h1 class="hero-title">
+          Hey there! I'm Rebecca
+          <span class="sun-icon">☀️</span>
+        </h1>
+
+        <div class="hero-subkicker">
+          <p class="npm-line">Rebeccaniaga Napitupulu • NPM: 2506598394</p>
+          <p class="program-line">S1 Sistem Informasi — Universitas Indonesia</p>
+        </div>
+
+        <p class="hero-bio">
+          Information Systems student at the Faculty of Computer Science, Universitas Indonesia,
+          currently in my third semester. I'm interested in Product, Data, and Marketing, and
+          passionate about exploring how technology and data can be turned into meaningful solutions.
+          I'm always eager to learn, grow, and build impactful IT solutions for the future.
+        </p>
+
+        <div class="cv-button-wrap">
+          <a href="{% static 'docs/CV_Rebeccaniaga Napitupuluu.pdf' %}" target="_blank" class="btn-cv">
+            <i data-lucide="download" class="icon-sm"></i>
+            Download CV
+          </a>
+        </div>
+
+        <div class="social-row">
+          <span class="social-label">FIND ME ON:</span>
+
+          <a href="https://github.com/rebeccania" target="_blank" title="GitHub" class="social-icon">
+          <svg class="icon-md" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55 0-.27-.01-1.16-.02-2.11-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.75 2.69 1.25 3.34.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.25.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.15 1.18a10.9 10.9 0 0 1 2.87-.39c.97 0 1.95.13 2.87.39 2.19-1.49 3.15-1.18 3.15-1.18.62 1.59.23 2.76.11 3.05.73.8 1.18 1.83 1.18 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.07.78 2.16 0 1.56-.01 2.82-.01 3.2 0 .3.2.66.79.55A10.52 10.52 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5Z"/>
+          </svg>
+          </a>
+
+          <a href="https://www.linkedin.com/in/rebeccaniaga" target="_blank" title="LinkedIn" class="social-icon">
+            <svg class="icon-md" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.14 1.44-2.14 2.94v5.66H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.59 0 4.26 2.37 4.26 5.45v6.29ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.56V9h3.56v11.45Z"/>
+            </svg>
+          </a>
+
+          <a href="https://instagram.com/rebeccania_" target="_blank" title="Instagram" class="social-icon">
+            <svg class="icon-md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37a4 4 0 1 1-7.914 1.174A4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </a>
+
+          <a href="mailto:rebbecaniaga22@gmail.com" title="Email" class="social-icon">
+            <i data-lucide="mail" class="icon-md"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Kolom Kanan: Foto Profil -->
+      <div class="hero-photo-wrap">
+        <div class="hero-photo-frame">
+         <img src="{% static 'img/fotoformal.jpeg' %}" alt="Foto Rebecca" class="hero-photo">
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= HALAMAN 2: GET TO KNOW ME ================= -->
+  <section id="about" class="about">
+    <div class="section-glow"></div>
+
+    <div class="container about-header">
+      <span class="about-badge">GET TO KNOW ME ✨</span>
+      <h2 class="about-title">The Mind Behind The Systems</h2>
+      <p class="about-subtitle">
+        Where technology, data, and creativity come together to turn ideas into meaningful solutions.
+      </p>
+    </div>
+
+    <div class="container about-grid">
+
+      <!-- Kolom Kiri: 3 Kartu -->
+      <div class="card-column">
+
+        <div class="trait-card">
+          <div class="trait-header">
+            <span class="trait-emoji">⚙️</span>
+            <h3 class="trait-title">Systems Thinker</h3>
+          </div>
+          <p class="trait-text">Curious about how systems, databases, and technology work together.</p>
+        </div>
+
+        <div class="trait-card">
+          <div class="trait-header">
+            <span class="trait-emoji">📊</span>
+            <h3 class="trait-title">Data Curious</h3>
+          </div>
+          <p class="trait-text">Enjoy finding patterns and insights hidden within data.</p>
+        </div>
+
+        <div class="trait-card">
+          <div class="trait-header">
+            <span class="trait-emoji">🎬</span>
+            <h3 class="trait-title">Creative Side</h3>
+          </div>
+          <p class="trait-text">Video editing, little painting, and anything that lets me get creative.</p>
+        </div>
+      </div>
+
+      <!-- Kolom Tengah: Avatar -->
+      <div class="avatar-column">
+        <div class="avatar-frame">
+          <div class="avatar-inner">
+            <img src="{% static 'img/fotokaca.jpeg' %}" alt="Rebecca" class="avatar-img">
+          </div>
+        </div>
+        <div class="avatar-caption">
+          <span>🍵</span> Problem Solver &amp; Matcha Lover
+        </div>
+      </div>
+
+      <!-- Kolom Kanan: 3 Kartu -->
+      <div class="card-column">
+
+        <div class="trait-card">
+          <div class="trait-header">
+            <span class="trait-emoji">💡</span>
+            <h3 class="trait-title">Problem Solver</h3>
+          </div>
+          <p class="trait-text">I like breaking complex problems into simpler, more manageable pieces.</p>
+        </div>
+
+        <div class="trait-card">
+          <div class="trait-header">
+            <span class="trait-emoji">🔗</span>
+            <h3 class="trait-title">Tech × Human</h3>
+          </div>
+          <p class="trait-text">Interested in how technology can make processes and experiences better for people.</p>
+        </div>
+
+        <div class="trait-card">
+          <div class="trait-header">
+            <span class="trait-emoji">🌱</span>
+            <h3 class="trait-title">Always Exploring</h3>
+          </div>
+          <p class="trait-text">Always learning, experimenting, and discovering something new.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= SECTION 3: EDUCATION TIMELINE ================= -->
+  <section id="education" class="education">
+    <div class="section-glow education-glow"></div>
+
+    <div class="container about-header">
+      <span class="about-badge">🎓 EDUCATION</span>
+      <h2 class="about-title">Where My Story Began to Take Shape</h2>
+      <p class="about-subtitle">Every chapter shaped the way I learn, think, and see possibilities.</p>
+    </div>
+
+    <div class="container timeline-wrap">
+      <div class="timeline-line"></div>
+
+      <div class="timeline-list">
+
+        <!-- ITEM 1: Kuliah (2025 - Present) -->
+        <div class="timeline-item timeline-left">
+          <div class="timeline-dot timeline-dot-amber">
+            <div class="timeline-dot-inner"></div>
+          </div>
+          <div class="timeline-card-wrap">
+            <div class="timeline-card timeline-card-amber">
+              <div class="timeline-meta">
+                <span class="timeline-badge timeline-badge-amber">2025 — PRESENT</span>
+                <span class="timeline-type">Higher Education</span>
+              </div>
+              <h3 class="timeline-title">Bachelor of Information Systems</h3>
+              <p class="timeline-place timeline-place-amber">Universitas Indonesia</p>
+              <p class="timeline-desc">
+                Exploring the intersection of technology, data, and people, while learning to transform
+                problems into meaningful digital solutions.
+              </p>
+              <div class="timeline-tags">
+                <span class="timeline-tag">Information Systems</span>
+                <span class="timeline-tag">Technology</span>
+                <span class="timeline-tag">Data</span>
+              </div>
             </div>
-        </section>
-    </main>
-
-    <footer class="site-footer">
-        <div class="container">
-            <p>&copy; 2026 Rebeccaniaga Napitupulu. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
+          </div>
         </div>
-    </footer>
+
+        <!-- ITEM 2: SMA (2021 - 2024) -->
+        <div class="timeline-item timeline-right">
+          <div class="timeline-dot timeline-dot-cyan"></div>
+          <div class="timeline-card-wrap">
+            <div class="timeline-card timeline-card-cyan">
+              <div class="timeline-meta">
+                <span class="timeline-badge timeline-badge-cyan">2021 — 2024</span>
+                <span class="timeline-type">Senior High School</span>
+              </div>
+              <h3 class="timeline-title">Science Program</h3>
+              <p class="timeline-place timeline-place-cyan">SMA Santo Thomas 1 Medan</p>
+              <p class="timeline-desc">
+                Developed an analytical mindset through Science, strengthening my curiosity,
+                logical thinking, and problem-solving skills.
+              </p>
+              <div class="timeline-tags">
+                <span class="timeline-tag">Science</span>
+                <span class="timeline-tag">Analytical Thinking</span>
+                <span class="timeline-tag">Problem Solving</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ITEM 3: SMP (2018 - 2021) -->
+        <div class="timeline-item timeline-left">
+          <div class="timeline-dot timeline-dot-purple"></div>
+          <div class="timeline-card-wrap">
+            <div class="timeline-card timeline-card-purple">
+              <div class="timeline-meta">
+                <span class="timeline-badge timeline-badge-purple">2018 — 2021</span>
+                <span class="timeline-type">Junior High School</span>
+              </div>
+              <h3 class="timeline-title">Junior High School</h3>
+              <p class="timeline-place timeline-place-purple">SMP Santo Thomas 1 Medan</p>
+              <p class="timeline-desc">
+                A stage of exploration where I discovered new interests, built confidence,
+                and learned to grow through different experiences.
+              </p>
+              <div class="timeline-tags">
+                <span class="timeline-tag">Exploration</span>
+                <span class="timeline-tag">Growth</span>
+                <span class="timeline-tag">Learning</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ITEM 4: SD (2012 - 2018) -->
+        <div class="timeline-item timeline-right">
+          <div class="timeline-dot timeline-dot-rose"></div>
+          <div class="timeline-card-wrap">
+            <div class="timeline-card timeline-card-rose">
+              <div class="timeline-meta">
+                <span class="timeline-badge timeline-badge-rose">2012 — 2018</span>
+                <span class="timeline-type">Primary School</span>
+              </div>
+              <h3 class="timeline-title">Elementary School</h3>
+              <p class="timeline-place timeline-place-rose">SD Antonius VI Medan</p>
+              <p class="timeline-desc">
+                Where my learning journey began, nurturing my curiosity and building the
+                foundation for lifelong learning.
+              </p>
+              <div class="timeline-tags">
+                <span class="timeline-tag">Curiosity</span>
+                <span class="timeline-tag">Foundation</span>
+                <span class="timeline-tag">Learning</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    lucide.createIcons();
+  });
+  </script>
+
 </body>
 </html>
