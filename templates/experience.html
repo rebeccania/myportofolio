@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Experience — {{ name }}</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+  <div class="hero-glow"></div>
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="site-header">
+    <div class="container header-inner">
+
+      <a href="{% url 'main:show_main' %}" class="brand">
+        <span class="brand-dot"></span>
+        {{ name }}
+      </a>
+
+      <nav class="main-nav">
+        <a href="{% url 'main:show_main' %}" class="nav-link">home</a>
+        <a href="{% url 'main:show_main' %}#about" class="nav-link">about</a>
+        <a href="{% url 'main:show_main' %}#education" class="nav-link">education</a>
+        <a href="{% url 'main:show_experience' %}" class="nav-link active">experience</a>
+      </nav>
+
+      <a href="mailto:rebbecaniaga22@gmail.com" class="btn-hire">Hire Me</a>
+
+    </div>
+  </header>
+
+  <!-- ================= EXPERIENCE SECTION (Dinamis dari Model) ================= -->
+  <main>
+    <section class="experience-section" id="experience" style="padding: 6rem 0;">
+      <div class="container about-header">
+        <span class="about-badge">💼 EXPERIENCE</span>
+        <h2 class="about-title">Perjalanan Saya Sejauh Ini</h2>
+        <p class="about-subtitle">Daftar pengalaman dan aktivitas yang membentuk keahlian profesional saya.</p>
+      </div>
+
+      <div class="container">
+        <div class="experience-grid">
+            {% for experience in experience_list %}
+                <article class="experience-card">
+                    <span class="experience-category">
+                        {{ experience.get_category_display }}
+                    </span>
+                    <h2>{{ experience.title }}</h2>
+                    <p class="experience-description">
+                        {{ experience.description }}
+                    </p>
+                    {% if experience.is_ongoing %}
+                        <p class="experience-status" style="color: #d97706; font-weight: bold;">Sedang berlangsung</p>
+                    {% else %}
+                        <p class="experience-status" style="color: #059669; font-weight: bold;">Selesai</p>
+                    {% endif %}
+                </article>
+            {% empty %}
+                <p class="empty-state" style="grid-column: 1 / -1; text-align: center; color: var(--text-muted);">
+                    Belum ada pengalaman yang ditambahkan.
+                </p>
+            {% endfor %}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    lucide.createIcons();
+  });
+  </script>
+</body>
+</html>
