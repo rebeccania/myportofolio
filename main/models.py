@@ -25,3 +25,23 @@ class Experience(models.Model):
     @property
     def is_ongoing(self):
         return self.ended_at is None
+
+class Education(models.Model):
+    THEME_CHOICES = [
+        ("amber", "Amber"),
+        ("cyan", "Cyan"),
+        ("purple", "Purple"),
+        ("rose", "Rose"),
+    ]
+
+    level_type = models.CharField(max_length=100)
+    title = models.CharField(max_length=200)
+    institution = models.CharField(max_length=200)
+    start_year = models.IntegerField()
+    end_year = models.CharField(max_length=20)
+    description = models.TextField()
+    tags = models.CharField(max_length=300, blank=True)
+    color_theme = models.CharField(max_length=10, choices=THEME_CHOICES, default="amber")
+
+    def __str__(self):
+        return f"{self.title} - {self.institution}"
