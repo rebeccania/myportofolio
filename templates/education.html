@@ -1,0 +1,96 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Education — {{ name }}</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+  <div class="hero-glow"></div>
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="site-header">
+    <div class="container header-inner">
+
+      <a href="{% url 'main:show_main' %}" class="brand">
+        <span class="brand-dot"></span>
+        {{ name }}
+      </a>
+
+      <nav class="main-nav">
+        <a href="{% url 'main:show_main' %}" class="nav-link">home</a>
+        <a href="{% url 'main:show_main' %}#about" class="nav-link">about</a>
+        <a href="{% url 'main:show_education' %}" class="nav-link active">education</a>
+        <a href="{% url 'main:show_experience' %}" class="nav-link">experience</a>
+      </nav>
+
+      <a href="mailto:rebbecaniaga22@gmail.com" class="btn-hire">Hire Me</a>
+
+    </div>
+  </header>
+
+  <!-- ================= EDUCATION SECTION (Dinamis dari Model) ================= -->
+  <main>
+    <section id="education" class="education">
+      <div class="section-glow education-glow"></div>
+
+      <div class="container about-header">
+        <span class="about-badge">🎓 EDUCATION</span>
+        <h2 class="about-title">Where My Story Began to Take Shape</h2>
+        <p class="about-subtitle">Every chapter shaped the way I learn, think, and see possibilities.</p>
+      </div>
+
+      <div class="container timeline-wrap">
+        <div class="timeline-line"></div>
+
+        <div class="timeline-list">
+          {% for item in education_list %}
+            <div class="timeline-item {% cycle 'timeline-left' 'timeline-right' %}">
+              <div class="timeline-dot timeline-dot-{{ item.color_theme }}">
+                <div class="timeline-dot-inner"></div>
+              </div>
+              <div class="timeline-card-wrap">
+                <div class="timeline-card timeline-card-{{ item.color_theme }}">
+                  <div class="timeline-meta">
+                    <span class="timeline-badge timeline-badge-{{ item.color_theme }}">
+                      {{ item.start_year }} — {{ item.end_year }}
+                    </span>
+                    <span class="timeline-type">{{ item.level_type }}</span>
+                  </div>
+                  <h3 class="timeline-title">{{ item.title }}</h3>
+                  <p class="timeline-place timeline-place-{{ item.color_theme }}">{{ item.institution }}</p>
+                  <p class="timeline-desc">{{ item.description }}</p>
+                  {% if item.tags %}
+                    <div class="timeline-tags">
+                      <span class="timeline-tag">{{ item.tags }}</span>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% empty %}
+            <p class="empty-state" style="text-align: center; color: var(--text-muted);">
+              Belum ada data pendidikan yang ditambahkan.
+            </p>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    lucide.createIcons();
+  });
+  </script>
+</body>
+</html>
