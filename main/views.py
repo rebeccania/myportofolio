@@ -2,6 +2,7 @@ from django.shortcuts import render
 
 from main.models import Experience
 from main.models import Education
+from main.models import AboutTrait
 
 # Create your views here.
 def show_main(request):
@@ -34,3 +35,12 @@ def show_education(request):
         'education_list': education_list,
     }
     return render(request, 'education.html', context)
+
+def show_about(request):
+    traits = AboutTrait.objects.all()
+    context = {
+        'short_name': 'Rebecca',
+        'full_name': 'Rebeccaniaga Napitupulu',
+        'traits': traits,
+    }
+    return render(request, 'about.html', context)
