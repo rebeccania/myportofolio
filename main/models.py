@@ -45,3 +45,8 @@ class Education(models.Model):
 
     def __str__(self):
         return f"{self.title} - {self.institution}"
+    def get_tags_list(self):
+        """Memecah string tags berdasarkan koma dan merapikannya"""
+        if not self.tags:
+            return []
+        return [tag.strip() for tag in self.tags.split(",")]

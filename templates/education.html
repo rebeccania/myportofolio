@@ -69,11 +69,13 @@
                   <h3 class="timeline-title">{{ item.title }}</h3>
                   <p class="timeline-place timeline-place-{{ item.color_theme }}">{{ item.institution }}</p>
                   <p class="timeline-desc">{{ item.description }}</p>
-                  {% if item.tags %}
-                    <div class="timeline-tags">
-                      <span class="timeline-tag">{{ item.tags }}</span>
-                    </div>
-                  {% endif %}
+                {% if item.tags %}
+                <div class="timeline-tags">
+                    {% for tag in item.get_tags_list %}
+                    <span class="timeline-tag">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
                 </div>
               </div>
             </div>
