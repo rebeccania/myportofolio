@@ -20,7 +20,8 @@ def show_main(request):
 
 def show_experience(request):
     context = {
-        "name": "Rebeccaniaga Napitupulu",
+        'short_name': "Rebecca",
+        "full_name": "Rebeccaniaga Napitupulu",
         "experience_list": Experience.objects.all(),
     }
     return render(request, "experience.html", context)
@@ -28,7 +29,8 @@ def show_experience(request):
 def show_education(request):
     education_list = Education.objects.all().order_by('-start_year')
     context = {
-        'name': 'Rebeccaniaga Napitupulu',
+        'short_name': "Rebecca",
+        'full_name': 'Rebeccaniaga Napitupulu',
         'education_list': education_list,
     }
     return render(request, 'education.html', context)
