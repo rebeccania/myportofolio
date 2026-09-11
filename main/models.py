@@ -50,3 +50,11 @@ class Education(models.Model):
         if not self.tags:
             return []
         return [tag.strip() for tag in self.tags.split(",")]
+
+class AboutTrait(models.Model):
+    emoji = models.CharField(max_length=10)
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.title
