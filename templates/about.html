@@ -1,0 +1,119 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Me — {{ short_name }}</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+  <div class="hero-glow"></div>
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="site-header">
+    <div class="container header-inner">
+
+      <a href="{% url 'main:show_main' %}" class="brand">
+        <span class="brand-dot"></span>
+        {{ short_name }}
+      </a>
+
+      <nav class="main-nav">
+        <a href="{% url 'main:show_main' %}" class="nav-link">home</a>
+        <a href="{% url 'main:show_about' %}" class="nav-link active">about</a>
+        <a href="{% url 'main:show_education' %}" class="nav-link">education</a>
+        <a href="{% url 'main:show_experience' %}" class="nav-link">experience</a>
+      </nav>
+
+      <a href="mailto:rebbecaniaga22@gmail.com" class="btn-hire">Hire Me</a>
+
+    </div>
+  </header>
+
+  <!-- ================= ABOUT SECTION ================= -->
+  <main>
+    <section id="about" class="about">
+      <div class="section-glow"></div>
+
+      <div class="container about-header">
+        <span class="about-badge">GET TO KNOW ME ✨</span>
+        <h2 class="about-title">The Mind Behind The Systems</h2>
+        <p class="about-subtitle">
+          Where technology, data, and creativity come together to turn ideas into meaningful solutions.
+        </p>
+      </div>
+
+      <div class="container about-grid">
+
+        <!-- Kolom Kiri: 3 Kartu Pertama -->
+        <div class="card-column">
+          {% for trait in traits|slice:":3" %}
+            <div class="trait-card">
+              <div class="trait-header">
+                <span class="trait-emoji">{{ trait.emoji }}</span>
+                <h3 class="trait-title">{{ trait.title }}</h3>
+              </div>
+              <p class="trait-text">{{ trait.description }}</p>
+            </div>
+          {% empty %}
+            <p class="empty-state" style="text-align: center; color: var(--text-muted);">
+              Belum ada informasi sifat yang ditambahkan.
+            </p>
+          {% endfor %}
+        </div>
+
+        <!-- Kolom Tengah: Avatar -->
+        <div class="avatar-column">
+          <div class="avatar-frame">
+            <div class="avatar-inner">
+              <img src="{% static 'img/fotokaca.jpeg' %}" alt="Rebecca" class="avatar-img">
+            </div>
+          </div>
+          <div class="avatar-caption">
+            <span>🍵</span> Problem Solver &amp; Matcha Lover
+          </div>
+        </div>
+
+        <!-- Kolom Kanan: 3 Kartu Berikutnya -->
+        <div class="card-column">
+          {% for trait in traits|slice:"3:" %}
+            <div class="trait-card">
+              <div class="trait-header">
+                <span class="trait-emoji">{{ trait.emoji }}</span>
+                <h3 class="trait-title">{{ trait.title }}</h3>
+              </div>
+              <p class="trait-text">{{ trait.description }}</p>
+            </div>
+          {% empty %}
+            <!-- Kosongkan atau biarkan jika card kiri sudah menghandle empty state -->
+          {% endfor %}
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="site-footer" style="padding: 3rem 0; text-align: center; border-top: 1px solid var(--line); margin-top: 4rem;">
+    <div class="container">
+      <p style="color: var(--text-muted); font-size: 0.9rem;">
+        &copy; 2026 {{ full_name }}. Fakultas Ilmu Komputer, Universitas Indonesia.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    lucide.createIcons();
+  });
+  </script>
+</body>
+</html>
