@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from main.models import Experience
+from main.models import Experience, Education, AboutTrait
 
 # Create your tests here.
 class MainTest(TestCase):
@@ -56,3 +56,90 @@ class MainTest(TestCase):
         self.assertFalse(self.experience.is_ongoing)
         self.assertContains(response, "Selesai")
         self.assertNotContains(response, "Sedang berlangsung")
+
+class EducationTest(TestCase):
+    def setUp(self):
+        self.education = Education.objects.create(
+            level_type="Higher Education",
+            title="Bachelor of Information Systems",
+            institution="Universitas Indonesia",
+            start_year=2025,
+            end_year="Present",
+            description="Exploring the intersection of technology, data, and people.",
+            tags="Information Systems, Technology, Data",
+            color_theme="amber",
+        )
+ 
+    def test_education_model(self):
+        self.assertEqual(str(self.education), "Bachelor of Information Systems - Universitas Indonesia")
+        self.assertEqual(self.education.color_theme, "amber")
+        self.assertEqual(self.education.get_tags_list(), ["Information Systems", "Technology", "Data"])
+ 
+    def test_education_page(self):
+        response = self.client.get(reverse("main:show_education"))
+ 
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "education.html")
+        self.assertContains(response, self.education.title)
+        self.assertContains(response, self.education.institution)
+        self.assertContains(response, self.education.description)
+        self.assertContains(response, "Information Systems")
+        self.assertContains(response, f'href="{reverse("main:show_main")}"')
+ 
+    def test_empty_education_page(self):
+        Education.objects.all().delete()
+        response = self.client.get(reverse("main:show_education"))
+ 
+        self.assertContains(response, "Belum ada data pendidikan yang ditambahkan.")
+
+class AboutTest(TestCase):
+    def setUp(self):
+        self.trait = AboutTrait.objects.create(
+            emoji="⚙️",
+            title="Systems Thinker",
+            description="Curious about how systems, databases, and technology work together.",
+        )
+ 
+    def test_about_model(self):
+        self.assertEqual(str(self.trait), "Systems Thinker")
+        self.assertEqual(self.trait.emoji, "⚙️")
+ 
+    def test_about_page(self):
+        response = self.client.get(reverse("main:show_about"))
+ 
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "about.html")
+        self.assertContains(response, self.trait.title)
+        self.assertContains(response, self.trait.description)
+        self.assertContains(response, f'href="{reverse("main:show_main")}"')
+ 
+    def test_empty_about_page(self):
+        AboutTrait.objects.all().delete()
+        response = self.client.get(reverse("main:show_about"))
+ 
+        self.assertContains(response, "Belum ada informasi sifat yang ditambahkan.")
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
