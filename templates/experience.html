@@ -26,14 +26,19 @@
         {{ short_name }}
       </a>
 
-      <nav class="main-nav">
+      <nav class="main-nav" id="mainNav">
         <a href="{% url 'main:show_main' %}" class="nav-link">home</a>
         <a href="{% url 'main:show_main' %}" class="nav-link">about</a>
         <a href="{% url 'main:show_main' %}" class="nav-link">education</a>
         <a href="{% url 'main:show_experience' %}" class="nav-link active">experience</a>
       </nav>
 
-      <a href="mailto:rebbecaniaga22@gmail.com" class="btn-hire">Hire Me</a>
+      <div class="header-actions">
+            <a href="mailto:rebbecaniaga22@gmail.com" class="btn-hire">Hire Me</a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+              <i data-lucide="menu" class="icon-md"></i>
+            </button>
+          </div>
 
     </div>
   </header>
@@ -86,7 +91,20 @@
   <script>
   document.addEventListener('DOMContentLoaded', function () {
     lucide.createIcons();
+   const navToggle = document.getElementById('navToggle');
+    const mainNav = document.getElementById('mainNav');
+
+  navToggle.addEventListener('click', function () {
+    mainNav.classList.toggle('open');
   });
-  </script>
+
+  // Tutup menu otomatis kalau salah satu link diklik
+  document.querySelectorAll('.main-nav .nav-link').forEach(function (link) {
+    link.addEventListener('click', function () {
+      mainNav.classList.remove('open');
+    });
+  });
+});
+</script>
 </body>
 </html>
