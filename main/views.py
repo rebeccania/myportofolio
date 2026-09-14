@@ -8,6 +8,8 @@ from main.models import AboutTrait
 def show_main(request):
     context = {
         "name": "Rebeccaniaga Napitupulu",
+        'short_name': "Rebecca",
+        "full_name": "Rebeccaniaga Napitupulu",
         "npm": "2506598394",
         "study_program": "S1 Sistem Informasi",
         "bio": (
