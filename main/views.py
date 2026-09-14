@@ -1,8 +1,11 @@
-from django.shortcuts import render
+from django.contrib import messages
+from django.shortcuts import redirect, render
+from main.forms import ProjectForm
 
 from main.models import Experience
 from main.models import Education
 from main.models import AboutTrait
+from main.models import Project
 
 # Create your views here.
 def show_main(request):
@@ -46,3 +49,26 @@ def show_about(request):
         'traits': traits,
     }
     return render(request, 'about.html', context)
+
+def create_project(request):
+    form = ProjectForm(request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Proyek baru berhasil ditambahkan!")
+        return redirect("main:show_projects")
+
+    context = {
+        "short_name": "Rebecca",
+        "full_name": "Rebeccaniaga Napitupulu",
+        "form": form,
+    }
+    return render(request, "projects_form.html", context)
+
+def show_projects(request):
+    context = {
+        "short_name": "Rebecca",
+        "full_name": "Rebeccaniaga Napitupulu",
+        "project_list": Project.objects.all(),
+    }
+    return render(request, "project.html", context)
