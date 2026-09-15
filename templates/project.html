@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Projects — {{ short_name }}{% endblock title %}
+{% block nav_projects %}active{% endblock %}
+
+{% block content %}
+
+  <main>
+    <section class="experience-section" id="experience" style="padding: 6rem 0;">
+      <div class="container about-header">
+        <span class="about-badge">💼 PROJECTS</span>
+        <h2 class="about-title">Karya yang Saya Bangun</h2>
+        <p class="about-subtitle">Daftar project yang pernah saya kerjakan.</p>
+      </div>
+
+      <div class="container">
+        <div class="project-header">
+          <h1>Projects</h1>
+          <a href="{% url 'main:create_project' %}" class="button project-add-button">
+            <span aria-hidden="true">+</span>
+            Tambah Project
+          </a>
+        </div>
+
+        <div class="experience-grid project-grid">
+          {% for project in project_list %}
+            <article class="experience-card">
+              {% if project.project_image_url %}
+                <img src="{{ project.project_image_url }}"
+                     alt="Gambar {{ project.title }}"
+                     class="project-image">
+              {% endif %}
+              <h2>{{ project.title }}</h2>
+              <span class="experience-category">{{ project.tech_stack }}</span>
+              <p class="experience-description">{{ project.description }}</p>
+
+              {% if project.project_url %}
+                <p class="experience-status">
+                  <a href="{{ project.project_url }}">Lihat Project</a>
+                </p>
+              {% endif %}
+            </article>
+          {% empty %}
+            <p class="empty-state" style="grid-column: 1 / -1; text-align: center; color: var(--text-muted);">
+              Belum ada project yang ditambahkan.
+            </p>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  </main>
+
+{% endblock content %}
