@@ -920,3 +920,105 @@ body {
     justify-content: center;
   }
 }
+
+.project-form {
+    width: 100%;
+    max-width: 100%;
+    margin-top: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: 700;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.7rem;
+    border: 1px solid var(--accent, #ccc);
+    border-radius: var(--radius, 8px);
+    font: inherit;
+    transition: border-color 0.2s ease, outline-color 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: 2px solid var(--accent, #ccc);
+    border-color: var(--accent, #ccc);
+}
+
+.form-error {
+    color: #b42318;
+    font-size: 0.85rem;
+    margin-top: 0.35rem;
+}
+
+.button {
+    display: inline-block;
+    height: fit-content;
+    border: 0;
+    border-radius: var(--radius, 8px);
+    padding: 0.65rem 1rem;
+    background: var(--accent, #333);
+    color: white;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.button-secondary {
+    background: var(--card-bg);   /* #20143a — ungu gelap */
+    border: 1px solid var(--purple-line);
+    color: var(--ink);
+
+}
+
+.project-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.project-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.project-grid .experience-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.project-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid black;
+    border-radius: var(--radius, 8px);
+    margin-bottom: 0.75rem;
+}
+
+.project-header h1 {
+    margin-bottom: 0;
+}
+
+.project-add-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.project-add-button span {
+    font-size: 1.25rem;
+    line-height: 1;
+}
