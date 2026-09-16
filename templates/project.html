@@ -6,7 +6,7 @@
 
 {% block content %}
 
-  <main>
+   <main>
     <section class="experience-section" id="experience" style="padding: 6rem 0;">
       <div class="container about-header">
         <span class="about-badge">💼 PROJECTS</span>
@@ -23,6 +23,19 @@
           </a>
         </div>
 
+        <!-- SEARCH BAR -->
+        <form method="get"
+              action="{% url 'main:show_projects' %}"
+              class="project-search">
+          <input type="search"
+                 name="title"
+                 value="{{ title_query }}"
+                 placeholder="Cari berdasarkan nama proyek"
+                 class="project-search__input"
+                 aria-label="Cari berdasarkan nama proyek">
+          <button type="submit" class="button">Cari</button>
+        </form>
+
         <div class="experience-grid project-grid">
           {% for project in project_list %}
             <article class="experience-card">
@@ -31,20 +44,33 @@
                      alt="Gambar {{ project.title }}"
                      class="project-image">
               {% endif %}
+
               <h2>{{ project.title }}</h2>
               <span class="experience-category">{{ project.tech_stack }}</span>
               <p class="experience-description">{{ project.description }}</p>
 
-              {% if project.project_url %}
-                <p class="experience-status">
-                  <a href="{{ project.project_url }}">Lihat Project</a>
-                </p>
-              {% endif %}
+              <div class="project-card-actions">
+                <div class="project-actions">
+                  {% if project.project_url %}
+                    <a href="{{ project.project_url }}" class="button" target="_blank">
+                      Lihat Project
+                    </a>
+                  {% endif %}
+
+                  {% include "components/project_delete_modal.html" with project=project %}
+                </div>
+              </div>
             </article>
           {% empty %}
-            <p class="empty-state" style="grid-column: 1 / -1; text-align: center; color: var(--text-muted);">
-              Belum ada project yang ditambahkan.
-            </p>
+            {% if title_query %}
+              <p class="empty-state" style="grid-column: 1 / -1; text-align: center; color: var(--text-muted);">
+                Tidak ada project dengan nama "{{ title_query }}".
+              </p>
+            {% else %}
+              <p class="empty-state" style="grid-column: 1 / -1; text-align: center; color: var(--text-muted);">
+                Belum ada project yang ditambahkan.
+              </p>
+            {% endif %}
           {% endfor %}
         </div>
       </div>
