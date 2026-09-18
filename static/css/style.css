@@ -866,6 +866,7 @@ body {
 }
 
 .experience-status {
+    color: #d97706;  
     margin-top: 1rem;
     font-size: 0.85rem;
     font-weight: 600;
@@ -1340,5 +1341,165 @@ body {
     .project-delete-modal__actions .button {
         width: 100%;
         text-align: center;
+    }
+}
+/* ---------- Halaman Form Experience ---------- */
+.experience-form-page {
+    padding: 6rem 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+.experience-form-container {
+    width: 100%;
+    max-width: 640px;
+    padding: 2rem;
+    background: var(--card-bg);
+    border: 1px solid var(--purple-line);
+    border-radius: var(--radius);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.experience-form-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+}
+
+.experience-form-subtitle {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: 1.75rem;
+    line-height: 1.5;
+}
+
+/* ---------- Form Group ---------- */
+.experience-form .form-group {
+    margin-bottom: 1.25rem;
+}
+
+.experience-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+}
+
+.experience-form input[type="text"],
+.experience-form input[type="url"],
+.experience-form input[type="date"],
+.experience-form input[type="datetime-local"],
+.experience-form input[type="email"],
+.experience-form input[type="number"],
+.experience-form textarea,
+.experience-form select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--purple-line);
+    border-radius: var(--radius);
+    background: rgba(0, 0, 0, 0.25);
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 0.9rem;
+    transition: border-color 0.2s ease, outline-color 0.2s ease;
+}
+
+.experience-form input::placeholder,
+.experience-form textarea::placeholder {
+    color: rgba(216, 205, 240, 0.4);
+}
+
+.experience-form input:focus,
+.experience-form textarea:focus,
+.experience-form select:focus {
+    outline: 2px solid var(--purple);
+    border-color: var(--purple);
+}
+
+.experience-form textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* ---------- Help & Error ---------- */
+.experience-form .form-help {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    opacity: 0.75;
+}
+
+.experience-form .form-error {
+    margin-top: 0.35rem;
+    font-size: 0.8rem;
+    color: #f87171;
+    font-weight: 600;
+}
+
+/* ---------- Tombol Aksi ---------- */
+.experience-form .form-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.experience-form .button {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    border-radius: var(--radius);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.experience-form .button-primary {
+    background: linear-gradient(to right, var(--accent-dark), var(--accent));
+    color: #0f172a;
+    box-shadow: 0 0 14px rgba(245, 158, 11, 0.3);
+}
+
+.experience-form .button-primary:hover {
+    filter: brightness(1.1);
+    box-shadow: 0 0 22px rgba(245, 158, 11, 0.5);
+}
+
+.experience-form .button-secondary {
+    background: var(--card-bg);
+    border: 1px solid var(--purple-line);
+    color: var(--ink);
+}
+
+.experience-form .button-secondary:hover {
+    background: var(--card-bg-hover);
+    border-color: rgba(167, 139, 250, 0.6);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 600px) {
+    .experience-form-page {
+        padding: 4rem 1rem;
+    }
+
+    .experience-form-container {
+        padding: 1.25rem;
+    }
+
+    .experience-form .form-actions {
+        flex-direction: column;
+    }
+
+    .experience-form .button {
+        width: 100%;
     }
 }
