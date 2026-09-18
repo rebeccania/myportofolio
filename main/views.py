@@ -3,7 +3,7 @@ from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.shortcuts import get_object_or_404
-from main.forms import ProjectForm
+from main.forms import ProjectForm,ExperienceForm
 
 from main.models import Experience
 from main.models import Education
@@ -95,3 +95,49 @@ def delete_project(request, project_id):
         return redirect("main:show_projects")
 
     return redirect("main:show_projects")
+
+# --- CREATE EXPERIENCE ---
+def create_experience(request):
+    form = ExperienceForm(request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Pengalaman baru berhasil ditambahkan!")
+        return redirect("main:show_experience")
+
+    context = {
+        "short_name": "Rebecca",
+        "full_name": "Rebeccaniaga Napitupulu",
+        "form": form,
+    }
+    return render(request, "experience_form.html", context)
+
+# --- UPDATE EXPERIENCE ---
+def edit_experience(request, id):
+    experience = get_object_or_404(Experience, pk=id)
+    form = ExperienceForm(request.POST or None, instance=experience)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Pengalaman berhasil diperbarui!")
+        return redirect("main:show_experience")
+
+    context = {
+        "short_name": "Rebecca",
+        "full_name": "Rebeccaniaga Napitupulu",
+        "form": form,
+    }
+    return render(request, "experience_form.html", context)
+
+# --- DELETE EXPERIENCE ---
+def delete_experience(request, id):
+    experience = get_object_or_404(Experience, pk=id)
+    experience.delete()
+    messages.success(request, "Pengalaman berhasil dihapus!")
+    return redirect("main:show_experience")
+
+# --- JSON DATA DELIVERY ---
+def get_experience_json(request):
+    experience_list = Experience.objects.all()
+    experience_json = serializers.serialize("json", experience_list)
+    return HttpResponse(experience_json, content_type="application/json")
