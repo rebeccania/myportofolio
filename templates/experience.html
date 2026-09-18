@@ -1,45 +1,84 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Experience — {{ name }}{% endblock title %}
+{% block title %}Experience — {{ short_name }}{% endblock title %}
 {% block nav_experience %}active{% endblock %}
 
 {% block content %}
+<main>
+  <section class="experience-section" id="experience" style="padding: 6rem 0;">
+    <div class="container about-header">
+      <span class="about-badge">💼 EXPERIENCE</span>
+      <h2 class="about-title">Perjalanan Saya Sejauh Ini</h2>
+      <p class="about-subtitle">Daftar pengalaman dan aktivitas yang membentuk keahlian profesional saya.</p>
+    </div>
 
-  <!-- ================= EXPERIENCE SECTION (Dinamis dari Model) ================= -->
-  <main>
-    <section class="experience-section" id="experience" style="padding: 6rem 0;">
-      <div class="container about-header">
-        <span class="about-badge">💼 EXPERIENCE</span>
-        <h2 class="about-title">Perjalanan Saya Sejauh Ini</h2>
-        <p class="about-subtitle">Daftar pengalaman dan aktivitas yang membentuk keahlian profesional saya.</p>
+    <div class="container">
+      <!-- HEADER: Judul + Tombol Tambah (mirip project) -->
+      <div class="project-header">
+        <h1>Experience</h1>
+        <a href="{% url 'main:create_experience' %}" class="button project-add-button">
+          <span aria-hidden="true">+</span>
+          Tambah Pengalaman
+        </a>
       </div>
 
-      <div class="container">
-        <div class="experience-grid">
-            {% for experience in experience_list %}
-                <article class="experience-card">
-                    <span class="experience-category">
-                        {{ experience.get_category_display }}
-                    </span>
-                    <h2>{{ experience.title }}</h2>
-                    <p class="experience-description">
-                        {{ experience.description }}
-                    </p>
-                    {% if experience.is_ongoing %}
-                        <p class="experience-status" style="color: #d97706; font-weight: bold;">Sedang berlangsung</p>
-                    {% else %}
-                        <p class="experience-status" style="color: #059669; font-weight: bold;">Selesai</p>
-                    {% endif %}
-                </article>
-            {% empty %}
-                <p class="empty-state" style="grid-column: 1 / -1; text-align: center; color: var(--text-muted);">
-                    Belum ada pengalaman yang ditambahkan.
-                </p>
-            {% endfor %}
-        </div>
-      </div>
-    </section>
-  </main>
+      <!-- SEARCH BAR (mirip project) -->
+      <form method="get"
+            action="{% url 'main:show_experience' %}"
+            class="project-search">
+        <input type="search"
+               name="title"
+               value="{{ title_query }}"
+               placeholder="Cari berdasarkan nama pengalaman"
+               class="project-search__input"
+               aria-label="Cari berdasarkan nama pengalaman">
+        <button type="submit" class="button">Cari</button>
+      </form>
 
+      <!-- GRID (pakai class project-grid biar identik) -->
+      <div class="experience-grid project-grid">
+        {% for exp in experience_list %}
+          <article class="experience-card">
+             {% if exp.thumbnail %}
+                <img src="{{ exp.thumbnail }}"
+                    alt="Gambar {{ exp.title }}"
+                    class="project-image">
+                {% endif %}
+
+            <h2>{{ exp.title }}</h2>
+            <span class="experience-category">{{ exp.category }}</span>
+            <p class="experience-description">{{ exp.description }}</p>
+
+            <div class="project-card-actions">
+              <div class="project-actions">
+                <span class="experience-status">
+                {% if exp.ended_at %}
+                Selesai: {{ exp.ended_at|date:"M Y" }}
+                {% else %}
+                Sedang berlangsung
+                {% endif %}
+                </span>
+
+                <a href="{% url 'main:edit_experience' exp.id %}" class="button button-secondary">
+                  Edit
+                </a>
+
+                <a href="{% url 'main:delete_experience' exp.id %}" class="button button-danger">
+                  Hapus
+                </a>
+              </div>
+            </div>
+          </article>
+        {% empty %}
+          {% if title_query %}
+            <p class="empty-state">Tidak ada pengalaman dengan nama "{{ title_query }}".</p>
+          {% else %}
+            <p class="empty-state">Belum ada pengalaman yang ditambahkan.</p>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+</main>
 {% endblock content %}
