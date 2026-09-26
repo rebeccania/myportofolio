@@ -1503,3 +1503,37 @@ body {
         width: 100%;
     }
 }
+.star-form {
+    display: inline;
+}
+
+.button-star {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(245, 158, 11, 0.9);
+}
+
+.button-star.is-starred {
+    background:  rgba(245, 158, 11, 0.9);
+}
+
+.star-count {
+    padding: 0.05rem 0.4rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.25);
+    font-size: 0.8rem;
+}
+.main-nav .nav-link {
+    color: inherit; /* Mengikuti warna bawaan tema webmu */
+}
+
+/* 2. Hanya ubah warna link "Daftar di sini" / "Login di sini" di bagian bawah form */
+.experience-section p a {
+    color: #ffffff !important; /* Ubah ke #ffffff jika ingin putih bersih */
+    text-decoration: underline;
+}
+
+.experience-section p a:hover {
+    color: #ffc107 !important; /* Berubah jadi kuning/oranye terang saat di-hover mouse */
+}
