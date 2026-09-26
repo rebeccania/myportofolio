@@ -64,9 +64,7 @@
                   Edit
                 </a>
 
-                <a href="{% url 'main:delete_experience' exp.id %}" class="button button-danger">
-                  Hapus
-                </a>
+                {% include "components/experience_delete_modal.html" with exp=exp %}
               </div>
             </div>
           </article>
