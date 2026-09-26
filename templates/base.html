@@ -33,10 +33,20 @@
         <a href="{% url 'main:show_education' %}" class="nav-link {% block nav_education %}{% endblock %}">education</a>
         <a href="{% url 'main:show_experience' %}" class="nav-link {% block nav_experience %}{% endblock %}">experience</a>
         <a href="{% url 'main:show_projects' %}" class="nav-link {% block nav_projects %}{% endblock %}">projects</a>
-        </nav>
 
-      <div class="header-actions">
+        <div class="nav-auth-actions" style="display: flex; align-items: center; gap: 1rem; margin-left: 1rem;"></div>
+        {% if user.is_authenticated %}
+          <span class="nav-link" style="color: var(--ink); margin-left: 0.5rem;">{{ user.username }}</span>
+          <a href="{% url 'main:logout' %}" class="nav-link" style="margin-left: 0.25rem;">Logout</a>
+        {% else %}
+          <a href="{% url 'main:login' %}" class="nav-link" style="margin-left: 0.5rem;">Login</a>
+          <a href="{% url 'main:register' %}" class="nav-link" style="margin-left: 0.25rem;">Register</a>
+        {% endif %}
+        
         <a href="mailto:rebbecaniaga22@gmail.com" class="btn-hire">Hire Me</a>
+      </div>
+    </nav>
+    <div class="header-actions">
         <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
           <i data-lucide="menu" class="icon-md"></i>
         </button>
