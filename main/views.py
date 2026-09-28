@@ -34,10 +34,12 @@ def show_main(request):
 
 
 def show_experience(request):
+    is_editor = request.user.is_authenticated and request.user.groups.filter(name='Editor').exists()
     context = {
         'short_name': "Rebecca",
         "full_name": "Rebeccaniaga Napitupulu",
         "experience_list": Experience.objects.all(),
+        "is_editor": is_editor,
     }
     return render(request, "experience.html", context)
 
@@ -79,10 +81,12 @@ def create_project(request):
     return render(request, "projects_form.html", context)
 
 def show_projects(request):
+    is_editor = request.user.is_authenticated and request.user.groups.filter(name='Editor').exists()
     context = {
         "short_name": "Rebecca",
         "full_name": "Rebeccaniaga Napitupulu",
         "project_list": Project.objects.all(),
+        "is_editor": is_editor,
     }
     return render(request, "project.html", context)
 
@@ -113,9 +117,34 @@ def delete_project(request, project_id):
 
     return redirect("main:show_projects")
 
+@login_required(login_url="/login/")
+def edit_project(request, id):
+    project = get_object_or_404(Project, pk=id)
+    
+    is_editor = request.user.groups.filter(name='Editor').exists()
+    if not (request.user.is_superuser or is_editor):
+        raise PermissionDenied
+
+    form = ProjectForm(request.POST or None, instance=project)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Proyek berhasil diperbarui!")
+        return redirect("main:show_projects")
+
+    context = {
+        "short_name": "Rebecca",
+        "full_name": "Rebeccaniaga Napitupulu",
+        "form": form,
+    }
+    return render(request, "projects_form.html", context)
+
 # --- CREATE EXPERIENCE ---
+@login_required(login_url="/login/")
 def create_experience(request):
     form = ExperienceForm(request.POST or None)
+    if not request.user.is_superuser:
+        raise PermissionDenied
 
     if request.method == "POST" and form.is_valid():
         form.save()
@@ -130,8 +159,14 @@ def create_experience(request):
     return render(request, "experience_form.html", context)
 
 # --- UPDATE EXPERIENCE ---
+@login_required(login_url="/login/")
 def edit_experience(request, id):
     experience = get_object_or_404(Experience, pk=id)
+
+    is_editor = request.user.groups.filter(name='Editor').exists()
+    if not (request.user.is_superuser or is_editor):
+        raise PermissionDenied
+        
     form = ExperienceForm(request.POST or None, instance=experience)
 
     if request.method == "POST" and form.is_valid():
@@ -147,8 +182,12 @@ def edit_experience(request, id):
     return render(request, "experience_form.html", context)
 
 # --- DELETE EXPERIENCE ---
+@login_required(login_url="/login/")
 def delete_experience(request, id):
     experience = get_object_or_404(Experience, pk=id)
+    if not request.user.is_superuser:
+        raise PermissionDenied
+    
     experience.delete()
     messages.success(request, "Pengalaman berhasil dihapus!")
     return redirect("main:show_experience")
