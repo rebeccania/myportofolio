@@ -1,4 +1,33 @@
-/* 1. Reset Dasar & Custom Properties */
+/* =========================================================
+   PORTFOLIO — STYLE SHEET
+   ---------------------------------------------------------
+   Daftar Section:
+   1.  Reset Dasar & Custom Properties
+   2.  Header / Navbar
+   3.  Hero Section
+   4.  About Section
+   5.  Education Timeline
+   6.  Experience Section
+   7.  Mobile Navigation & Header Actions
+   8.  Buttons (Base)
+   9.  Project Page
+   10. Star Button
+   11. Project Delete Modal
+   12. Project Form Modal (Tambah)
+   13. Hide Utility
+   14. Form Experience Page
+   15. Toast Notifikasi
+   16. Utility Link
+   17. Responsive — Hero & General
+   18. Responsive — Timeline
+   19. Responsive — Project Page
+   20. Responsive — Form Experience
+   ========================================================= */
+
+
+/* =========================================================
+   1. RESET DASAR & CUSTOM PROPERTIES
+   ========================================================= */
 * {
   margin: 0;
   padding: 0;
@@ -6,16 +35,17 @@
 }
 
 :root {
-  --ink: #ffffff;
-  --paper: #12062c;
-  --card-bg: #20143a;
-  --card-bg-hover: #2d1e50;
-  --accent: #f59e0b;
-  --accent-dark: #d97706;
-  --purple: #8b5cf6;
-  --purple-line: rgba(139, 92, 246, 0.3);
-  --text-muted: #d8cdf0;
-  --radius: 16px;
+  --ink: #ffffff;                              /* teks utama */
+  --paper: #12062c;                            /* background utama */
+  --card-bg: #20143a;                          /* background card/modal */
+  --card-bg-hover: #2d1e50;                    /* card saat hover */
+  --accent: #f59e0b;                           /* warna aksen oranye */
+  --accent-dark: #d97706;                      /* oranye gelap */
+  --purple: #8b5cf6;                           /* ungu utama */
+  --purple-line: rgba(139, 92, 246, 0.3);      /* garis ungu transparan */
+  --text-muted: #d8cdf0;                       /* teks sekunder */
+  --radius: 16px;                              /* sudut rounded */
+  --line: rgba(139, 92, 246, 0.3);             /* alias purple-line */
 }
 
 body {
@@ -40,6 +70,7 @@ body {
   z-index: 1;
 }
 
+/* Efek glow dekoratif */
 .hero-glow {
   position: absolute;
   top: -100px;
@@ -51,7 +82,21 @@ body {
   z-index: 0;
 }
 
-/* 2. Header */
+.section-glow {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 650px;
+  height: 450px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.18) 0%, rgba(18, 6, 44, 0) 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+
+/* =========================================================
+   2. HEADER / NAVBAR
+   ========================================================= */
 .site-header {
   position: sticky;
   top: 0;
@@ -103,6 +148,10 @@ body {
   font-weight: 500;
 }
 
+.main-nav .nav-link {
+  color: inherit;
+}
+
 .nav-link {
   padding: 0.375rem 1rem;
   border-radius: 999px;
@@ -136,7 +185,10 @@ body {
   filter: brightness(1.1);
 }
 
-/* 3. Hero Section */
+
+/* =========================================================
+   3. HERO SECTION
+   ========================================================= */
 .hero {
   padding: 4rem 0 5rem;
   position: relative;
@@ -288,18 +340,11 @@ body {
   object-fit: cover;
   object-position: center;
 }
-.section-glow {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 650px;
-  height: 450px;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.18) 0%, rgba(18, 6, 44, 0) 70%);
-  pointer-events: none;
-  z-index: 0;
-}
 
-/* 4. About Section */
+
+/* =========================================================
+   4. ABOUT SECTION
+   ========================================================= */
 .about {
   position: relative;
   padding: 5rem 0;
@@ -441,7 +486,10 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
-/* 5. Education Timeline Section */
+
+/* =========================================================
+   5. EDUCATION TIMELINE
+   ========================================================= */
 .education {
   position: relative;
   padding: 6rem 0;
@@ -599,7 +647,802 @@ body {
   border: 1px solid rgba(139, 92, 246, 0.2);
 }
 
-/* 6. Responsive (bagian hero dulu) */
+
+/* =========================================================
+   6. EXPERIENCE SECTION
+   ========================================================= */
+.experience-section {
+  padding: 5rem 0;
+  border-top: 1px solid rgba(88, 28, 135, 0.4);
+  position: relative;
+  z-index: 10;
+}
+
+.experience-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.experience-card {
+  padding: 1.5rem;
+  background-color: rgba(32, 20, 58, 0.9);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: var(--radius);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.experience-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(245, 158, 11, 0.6);
+  background-color: var(--card-bg-hover);
+}
+
+.experience-category {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background-color: rgba(245, 158, 11, 0.2);
+  color: #fcd34d;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  margin-bottom: 0.75rem;
+}
+
+.experience-card h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+
+.experience-description,
+.empty-state {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.experience-status {
+  color: #d97706;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   7. MOBILE NAVIGATION & HEADER ACTIONS
+   ========================================================= */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.nav-toggle {
+  display: none;
+  background: none;
+  border: 1px solid var(--purple-line);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: var(--ink);
+}
+
+
+/* =========================================================
+   8. BUTTONS (Base)
+   ========================================================= */
+.button {
+  display: inline-block;
+  height: fit-content;
+  border: 0;
+  border-radius: var(--radius);
+  padding: 0.65rem 1rem;
+  background: var(--accent);
+  color: white;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.button-secondary {
+  background: var(--card-bg);
+  border: 1px solid var(--purple-line);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.button-secondary:hover {
+  background: var(--card-bg-hover);
+  border-color: rgba(167, 139, 250, 0.6);
+}
+
+.button-danger {
+  background: #b42318;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.button-danger:hover {
+  background: #8e1c13;
+}
+
+
+/* =========================================================
+   9. PROJECT PAGE
+   ========================================================= */
+.project-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.project-header h1 {
+  margin-bottom: 0;
+}
+
+.project-add-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 1rem;
+  padding: 0.65rem 1.25rem;
+  background: linear-gradient(to right, var(--accent-dark), var(--accent));
+  color: #0f172a;
+  font-weight: 700;
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.3);
+  cursor: pointer;
+  transition: filter 0.2s ease, box-shadow 0.2s ease;
+}
+
+.project-add-button:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 0 22px rgba(245, 158, 11, 0.5);
+}
+
+.project-add-button span {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.project-search {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+  width: 100%;
+}
+
+.project-search__input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--purple-line);
+  border-radius: var(--radius);
+  background: var(--card-bg);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.9rem;
+  transition: border-color 0.2s ease, outline-color 0.2s ease;
+}
+
+.project-search__input::placeholder {
+  color: rgba(216, 205, 240, 0.5);
+}
+
+.project-search__input:focus {
+  outline: 2px solid var(--purple);
+  border-color: var(--purple);
+}
+
+.project-search .button {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(to right, var(--accent-dark), var(--accent));
+  color: #0f172a;
+  font-weight: 700;
+  font-size: 0.875rem;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.project-search .button:hover {
+  filter: brightness(1.1);
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.project-grid .experience-card {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem;
+  overflow: hidden;
+}
+
+.project-image {
+  display: block;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  margin-bottom: 1rem;
+  background-color: var(--paper);
+}
+
+.project-grid .experience-card h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.project-grid .experience-category {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: rgba(245, 158, 11, 0.2);
+  color: #fcd34d;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  margin-bottom: 0.75rem;
+  width: fit-content;
+}
+
+.project-grid .experience-description {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.project-card-actions {
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+}
+
+.project-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(139, 92, 246, 0.15);
+}
+
+.project-actions .button {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.55rem 1rem;
+  border-radius: 10px;
+}
+
+.project-actions .experience-status {
+  margin-top: 0;
+  display: inline-flex;
+}
+
+.project-actions a.button:not(.button-danger):not(.button-secondary) {
+  background: linear-gradient(to right, var(--accent-dark), var(--accent));
+  color: #0f172a;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.3);
+}
+
+.project-actions a.button:not(.button-danger):not(.button-secondary):hover {
+  box-shadow: 0 0 22px rgba(245, 158, 11, 0.5);
+}
+
+.project-grid .empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+
+/* =========================================================
+   10. STAR BUTTON
+   ========================================================= */
+.star-form {
+  display: inline;
+}
+
+.button-star {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(245, 158, 11, 0.9);
+}
+
+.button-star.is-starred {
+  background: rgba(245, 158, 11, 0.9);
+}
+
+.star-count {
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.25);
+  font-size: 0.8rem;
+}
+
+
+/* =========================================================
+   11. PROJECT DELETE MODAL
+   ========================================================= */
+.project-delete-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 1rem;
+  border: 0;
+  background: transparent;
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-delete-modal:popover-open {
+  display: flex;
+}
+
+.project-delete-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  padding: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  cursor: default;
+}
+
+.project-delete-modal__content {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 480px);
+  padding: 1.75rem;
+  background: var(--card-bg);
+  border: 1px solid var(--purple-line);
+  border-radius: var(--radius);
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.6);
+  color: var(--ink);
+}
+
+.project-delete-modal__content h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.project-delete-modal__content p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.project-delete-modal__content strong {
+  color: var(--accent);
+}
+
+.project-delete-modal__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.project-delete-modal__close:hover {
+  color: var(--accent);
+}
+
+.project-delete-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+
+/* =========================================================
+   12. PROJECT FORM MODAL (Tambah)
+   ========================================================= */
+.project-form-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 1rem;
+  border: 0;
+  background: transparent;
+  z-index: 10;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-form-modal:popover-open {
+  display: flex;
+}
+
+.project-form-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  padding: 0;
+  background: rgba(28, 25, 23, 0.58);
+  cursor: default;
+}
+
+.project-form-modal__content {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 640px);
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  padding: 1.5rem;
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.6);
+  color: var(--ink);
+}
+
+.project-form-modal__content h2 {
+  margin: 0 2.5rem 1.25rem 0;
+  font-family: "Space Grotesk", -apple-system, sans-serif;
+  font-size: 1.5rem;
+  color: var(--ink);
+}
+
+.project-form-modal__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.project-form-modal__close:hover {
+  color: var(--accent);
+}
+
+.project-form-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+/* Form di dalam modal */
+.project-form {
+  width: 100%;
+  max-width: 100%;
+  margin-top: 1.5rem;
+}
+
+.project-form-modal__content .form-group {
+  margin-bottom: 1.25rem;
+}
+
+.project-form-modal__content .form-group label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 700;
+  color: var(--ink);
+  font-size: 0.9rem;
+}
+
+.project-form-modal__content .form-group input,
+.project-form-modal__content .form-group textarea,
+.project-form-modal__content .form-group select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--purple-line);
+  border-radius: var(--radius);
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.9rem;
+  transition: border-color 0.2s ease, outline-color 0.2s ease;
+}
+
+.project-form-modal__content .form-group input::placeholder,
+.project-form-modal__content .form-group textarea::placeholder {
+  color: rgba(216, 205, 240, 0.45);
+}
+
+.project-form-modal__content .form-group input:focus,
+.project-form-modal__content .form-group textarea:focus,
+.project-form-modal__content .form-group select:focus {
+  outline: 2px solid var(--accent);
+  border-color: var(--accent);
+}
+
+.project-form-modal__content .form-error {
+  color: #fca5a5;
+  font-size: 0.85rem;
+  margin-top: 0.35rem;
+}
+
+
+/* =========================================================
+   13. HIDE UTILITY
+   ========================================================= */
+.hide {
+  display: none !important;
+}
+
+
+/* =========================================================
+   14. FORM EXPERIENCE PAGE
+   ========================================================= */
+.experience-form-page {
+  padding: 6rem 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.experience-form-container {
+  width: 100%;
+  max-width: 640px;
+  padding: 2rem;
+  background: var(--card-bg);
+  border: 1px solid var(--purple-line);
+  border-radius: var(--radius);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.experience-form-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+
+.experience-form-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 1.75rem;
+  line-height: 1.5;
+}
+
+.experience-form .form-group {
+  margin-bottom: 1.25rem;
+}
+
+.experience-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+.experience-form input[type="text"],
+.experience-form input[type="url"],
+.experience-form input[type="date"],
+.experience-form input[type="datetime-local"],
+.experience-form input[type="email"],
+.experience-form input[type="number"],
+.experience-form textarea,
+.experience-form select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--purple-line);
+  border-radius: var(--radius);
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 0.9rem;
+  transition: border-color 0.2s ease, outline-color 0.2s ease;
+}
+
+.experience-form input::placeholder,
+.experience-form textarea::placeholder {
+  color: rgba(216, 205, 240, 0.4);
+}
+
+.experience-form input:focus,
+.experience-form textarea:focus,
+.experience-form select:focus {
+  outline: 2px solid var(--purple);
+  border-color: var(--purple);
+}
+
+.experience-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.experience-form .form-help {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  opacity: 0.75;
+}
+
+.experience-form .form-error {
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  color: #f87171;
+  font-weight: 600;
+}
+
+.experience-form .form-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.experience-form .button {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.experience-form .button-primary {
+  background: linear-gradient(to right, var(--accent-dark), var(--accent));
+  color: #0f172a;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.3);
+}
+
+.experience-form .button-primary:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 0 22px rgba(245, 158, 11, 0.5);
+}
+
+.experience-form .button-secondary {
+  background: var(--card-bg);
+  border: 1px solid var(--purple-line);
+  color: var(--ink);
+}
+
+.experience-form .button-secondary:hover {
+  background: var(--card-bg-hover);
+  border-color: rgba(167, 139, 250, 0.6);
+}
+
+
+/* =========================================================
+   15. TOAST NOTIFIKASI
+   ========================================================= */
+.toast-component {
+  position: fixed;
+  top: 6rem;
+  right: 2rem;
+  bottom: auto;
+  left: auto;
+  margin: 0;
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  display: none;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.3s ease;
+  background-color: var(--card-bg);
+  border: 1px solid var(--purple-line);
+  color: var(--ink);
+  z-index: 200;
+  max-width: 380px;
+}
+
+.toast-component:popover-open {
+  display: flex;
+}
+
+.toast-hidden {
+  opacity: 0;
+  transform: translateY(-150%);
+  pointer-events: none;
+}
+
+.toast-show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.15rem;
+  font-family: "Space Grotesk", -apple-system, sans-serif;
+  color: var(--ink);
+}
+
+.toast-message {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.toast-success { border-left: 4px solid #22c55e; }
+.toast-error { border-left: 4px solid #b42318; }
+.toast-normal { border-left: 4px solid var(--accent); }
+
+
+/* =========================================================
+   16. UTILITY LINK (Login/Daftar)
+   ========================================================= */
+.experience-section p a {
+  color: #ffffff !important;
+  text-decoration: underline;
+}
+
+.experience-section p a:hover {
+  color: #ffc107 !important;
+}
+
+
+/* =========================================================
+   17. RESPONSIVE — HERO & GENERAL
+   ========================================================= */
 @media (max-width: 900px) {
   .hero-grid {
     grid-template-columns: 1fr;
@@ -620,165 +1463,10 @@ body {
   }
 }
 
-/* 5. Education Timeline Section */
-.education {
-  position: relative;
-  padding: 6rem 0;
-  border-top: 1px solid rgba(88, 28, 135, 0.4);
-  overflow: hidden;
-  z-index: 10;
-}
 
-.education-glow {
-  top: 33%;
-  width: 700px;
-  height: 500px;
-}
-
-.timeline-wrap {
-  position: relative;
-  max-width: 56rem;
-}
-
-.timeline-line {
-  position: absolute;
-  left: 1rem;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  transform: translateX(-50%);
-  background: linear-gradient(to bottom, var(--accent), var(--purple), #fb7185);
-  box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
-}
-
-.timeline-list {
-  display: flex;
-  flex-direction: column;
-  gap: 3rem;
-}
-
-.timeline-item {
-  position: relative;
-  display: flex;
-}
-
-.timeline-dot {
-  position: absolute;
-  left: 1rem;
-  top: 1.5rem;
-  transform: translate(-50%, -50%);
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 50%;
-  background-color: var(--paper);
-  border: 4px solid var(--accent);
-  box-shadow: 0 0 16px var(--accent);
-  z-index: 2;
-}
-
-.timeline-dot-inner {
-  width: 0.5rem;
-  height: 0.5rem;
-  margin: auto;
-  border-radius: 50%;
-  background-color: #fcd34d;
-}
-
-.timeline-dot-cyan { border-color: #38bdf8; box-shadow: 0 0 14px #38bdf8; }
-.timeline-dot-purple { border-color: #c084fc; box-shadow: 0 0 14px #c084fc; }
-.timeline-dot-rose { border-color: #fb7185; box-shadow: 0 0 14px #fb7185; }
-
-.timeline-card-wrap {
-  width: 100%;
-  padding-left: 3rem;
-}
-
-.timeline-card {
-  padding: 1.5rem;
-  border-radius: var(--radius);
-  background-color: rgba(32, 20, 58, 0.9);
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
-}
-
-.timeline-item:hover .timeline-card {
-  transform: translateY(-4px);
-}
-
-.timeline-card-amber:hover { border-color: rgba(245, 158, 11, 0.6); background-color: var(--card-bg-hover); }
-.timeline-card-cyan:hover { border-color: rgba(56, 189, 248, 0.6); background-color: var(--card-bg-hover); }
-.timeline-card-purple:hover { border-color: rgba(192, 132, 252, 0.6); background-color: var(--card-bg-hover); }
-.timeline-card-rose:hover { border-color: rgba(251, 113, 133, 0.6); background-color: var(--card-bg-hover); }
-
-.timeline-meta {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.timeline-badge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-
-.timeline-badge-amber { background-color: rgba(245, 158, 11, 0.2); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.4); }
-.timeline-badge-cyan { background-color: rgba(56, 189, 248, 0.2); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.4); }
-.timeline-badge-purple { background-color: rgba(168, 85, 247, 0.2); color: #d8b4fe; border: 1px solid rgba(168, 85, 247, 0.4); }
-.timeline-badge-rose { background-color: rgba(251, 113, 133, 0.2); color: #fda4af; border: 1px solid rgba(251, 113, 133, 0.4); }
-
-.timeline-type {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  font-weight: 500;
-}
-
-.timeline-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--ink);
-  margin-bottom: 0.25rem;
-  transition: color 0.2s ease;
-}
-
-.timeline-place {
-  font-size: 0.875rem;
-  font-weight: 600;
-  margin-bottom: 0.75rem;
-}
-
-.timeline-place-amber { color: var(--accent); }
-.timeline-place-cyan { color: #38bdf8; }
-.timeline-place-purple { color: #c084fc; }
-.timeline-place-rose { color: #fb7185; }
-
-.timeline-desc {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  line-height: 1.6;
-  margin-bottom: 1rem;
-}
-
-.timeline-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.timeline-tag {
-  padding: 0.25rem 0.625rem;
-  border-radius: 0.5rem;
-  font-size: 0.75rem;
-  background-color: var(--paper);
-  color: var(--text-muted);
-  border: 1px solid rgba(139, 92, 246, 0.2);
-}
-
-/* 6. Responsive — timeline breakpoint */
+/* =========================================================
+   18. RESPONSIVE — TIMELINE
+   ========================================================= */
 @media (min-width: 768px) {
   .timeline-line {
     left: 50%;
@@ -809,85 +1497,11 @@ body {
     left: 50%;
   }
 }
-.experience-section {
-    padding: 5rem 0;
-    border-top: 1px solid rgba(88, 28, 135, 0.4);
-    position: relative;
-    z-index: 10;
-}
 
-.experience-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-}
 
-.experience-card {
-    padding: 1.5rem;
-    background-color: rgba(32, 20, 58, 0.9);
-    border: 1px solid rgba(139, 92, 246, 0.3);
-    border-radius: var(--radius);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
-}
-
-.experience-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(245, 158, 11, 0.6);
-    background-color: var(--card-bg-hover);
-}
-
-.experience-category {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    background-color: rgba(245, 158, 11, 0.2);
-    color: #fcd34d;
-    border: 1px solid rgba(245, 158, 11, 0.4);
-    margin-bottom: 0.75rem;
-}
-
-.experience-card h2 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 0.5rem;
-}
-
-.experience-description,
-.empty-state {
-    font-size: 0.875rem;
-    color: var(--text-muted);
-    line-height: 1.6;
-    margin-bottom: 1rem;
-}
-
-.experience-status {
-    color: #d97706;  
-    margin-top: 1rem;
-    font-size: 0.85rem;
-    font-weight: 600;
-}
-/* 7. Mobile Navigation & Header Actions */
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.nav-toggle {
-  display: none;
-  background: none;
-  border: 1px solid var(--purple-line);
-  border-radius: 0.5rem;
-  padding: 0.5rem;
-  cursor: pointer;
-  color: var(--ink);
-}
-
+/* =========================================================
+   19. RESPONSIVE — PROJECT PAGE
+   ========================================================= */
 @media (max-width: 900px) {
   .main-nav {
     display: none;
@@ -904,17 +1518,17 @@ body {
     padding: 1rem;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
   }
-  
+
   .main-nav.open {
     display: flex;
   }
-  
+
   .main-nav .nav-link {
     padding: 0.75rem 1rem;
     text-align: center;
     border-radius: 0.5rem;
   }
-  
+
   .nav-toggle {
     display: inline-flex;
     align-items: center;
@@ -922,618 +1536,99 @@ body {
   }
 }
 
-.project-form {
-    width: 100%;
-    max-width: 100%;
-    margin-top: 1.5rem;
-}
+@media (max-width: 768px) {
+  .project-grid {
+    grid-template-columns: 1fr;
+  }
 
-.form-group {
-    margin-bottom: 1.25rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.4rem;
-    font-weight: 700;
-}
-
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 0.7rem;
-    border: 1px solid var(--accent, #ccc);
-    border-radius: var(--radius, 8px);
-    font: inherit;
-    transition: border-color 0.2s ease, outline-color 0.2s ease;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-    outline: 2px solid var(--accent, #ccc);
-    border-color: var(--accent, #ccc);
-}
-
-.form-error {
-    color: #b42318;
-    font-size: 0.85rem;
-    margin-top: 0.35rem;
-}
-
-.button {
-    display: inline-block;
-    height: fit-content;
-    border: 0;
-    border-radius: var(--radius, 8px);
-    padding: 0.65rem 1rem;
-    background: var(--accent, #333);
-    color: white;
-    cursor: pointer;
-    font: inherit;
-    font-weight: 700;
-    text-decoration: none;
-}
-
-.button-secondary {
-    background: var(--card-bg);   /* #20143a — ungu gelap */
-    border: 1px solid var(--purple-line);
-    color: var(--ink);
-
-}
-
-.project-header {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-.project-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.project-grid .experience-card {
-    display: flex;
+  .project-search {
     flex-direction: column;
-}
+  }
 
-.project-image {
-    display: block;
+  .project-search .button {
     width: 100%;
-    height: auto;
-    border: 1px solid black;
-    border-radius: var(--radius, 8px);
-    margin-bottom: 0.75rem;
+  }
 }
 
-.project-header h1 {
-    margin-bottom: 0;
-}
-
-.project-add-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-}
-
-.project-add-button span {
-    font-size: 1.25rem;
-    line-height: 1;
-}
-/* Project actions */
-.project-search {
-    display: flex;
-    gap: 0.75rem;
-    margin-bottom: 1.75rem;
-    width: 100%;
-}
-
-.project-search__input {
-    flex: 1;
-    min-width: 0;
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--purple-line);
-    border-radius: var(--radius);
-    background: var(--card-bg);
-    color: var(--ink);
-    font: inherit;
-    font-size: 0.9rem;
-    transition: border-color 0.2s ease, outline-color 0.2s ease;
-}
-
-.project-search__input::placeholder {
-    color: rgba(216, 205, 240, 0.5);
-}
-
-.project-search__input:focus {
-    outline: 2px solid var(--purple);
-    border-color: var(--purple);
-}
-
-.project-search .button {
-    padding: 0.75rem 1.5rem;
-    background: linear-gradient(to right, var(--accent-dark), var(--accent));
-    color: #0f172a;
-    font-weight: 700;
-    font-size: 0.875rem;
-    border: none;
-    border-radius: var(--radius);
-    cursor: pointer;
-    flex-shrink: 0;
-}
-
-.project-search .button:hover {
-    filter: brightness(1.1);
-}
-
-/* ---------- Project Grid ---------- */
-.project-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 1.5rem;
-}
-
-.project-grid .experience-card {
-    display: flex;
+@media (max-width: 600px) {
+  .project-header {
+    align-items: flex-start;
     flex-direction: column;
+  }
+
+  .project-add-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .project-search {
+    flex-direction: column;
+  }
+
+  .project-search .button {
+    width: 100%;
+  }
+
+  .project-delete-modal {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .project-delete-modal__content {
+    width: 100%;
     padding: 1.25rem;
-    background-color: rgba(32, 20, 58, 0.9);
-    border: 1px solid rgba(139, 92, 246, 0.3);
-    border-radius: var(--radius);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
-    overflow: hidden;
-}
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
 
-.project-grid .experience-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(245, 158, 11, 0.6);
-    background-color: var(--card-bg-hover);
-}
+  .project-delete-modal__actions {
+    flex-direction: column-reverse;
+  }
 
-/* ---------- Gambar ---------- */
-.project-image {
-    display: block;
+  .project-delete-modal__actions .button {
     width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 12px;
-    border: 1px solid rgba(139, 92, 246, 0.4);
-    margin-bottom: 1rem;
-    background-color: var(--paper);
-}
-
-/* ---------- Judul Project ---------- */
-.project-grid .experience-card h2 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 0.5rem;
-    line-height: 1.3;
-}
-
-/* ---------- Tech stack badge ---------- */
-.project-grid .experience-category {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 999px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    background-color: rgba(245, 158, 11, 0.2);
-    color: #fcd34d;
-    border: 1px solid rgba(245, 158, 11, 0.4);
-    margin-bottom: 0.75rem;
-    width: fit-content;
-}
-
-/* ---------- Deskripsi ---------- */
-.project-grid .experience-description {
-    font-size: 0.875rem;
-    color: var(--text-muted);
-    line-height: 1.6;
-    margin-bottom: 1rem;
-}
-
-/* ---------- Actions (Lihat + Hapus) ---------- */
-.project-card-actions {
-    display: flex;
-    flex-direction: column;
-    margin-top: auto;
-}
-
-.project-actions {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid rgba(139, 92, 246, 0.15);
-}
-
-.project-actions .button {
-    font-size: 0.8rem;
-    font-weight: 600;
-    padding: 0.55rem 1rem;
-    border-radius: 10px;
-}
-
-.project-actions .experience-status {
-    margin-top: 0;
-    display: inline-flex;
-}
-
-/* ---------- Link "Lihat Project" ---------- */
-.project-actions a.button:not(.button-danger):not(.button-secondary) {
-    background: linear-gradient(to right, var(--accent-dark), var(--accent));
-    color: #0f172a;
-    box-shadow: 0 0 14px rgba(245, 158, 11, 0.3);
-}
-
-.project-actions a.button:not(.button-danger):not(.button-secondary):hover {
-    box-shadow: 0 0 22px rgba(245, 158, 11, 0.5);
-}
-
-/* ---------- Tombol Danger (Hapus) ---------- */
-.button-danger {
-    background: #b42318;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-
-.button-danger:hover {
-    background: #8e1c13;
-}
-
-/* ---------- Tombol Secondary (Batal) ---------- */
-.button-secondary {
-    background: var(--card-bg);
-    border: 1px solid var(--purple-line);
-    color: var(--ink);
-    cursor: pointer;
-    transition: background 0.2s ease, border-color 0.2s ease;
-}
-
-.button-secondary:hover {
-    background: var(--card-bg-hover);
-    border-color: rgba(167, 139, 250, 0.6);
-}
-
-/* ---------- Modal Konfirmasi Hapus ---------- */
-.project-delete-modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    max-width: none;
-    max-height: none;
-    margin: 0;
-    padding: 1rem;
-    border: 0;
-    background: transparent;
-    z-index: 100;
-    align-items: center;
-    justify-content: center;
-}
-
-.project-delete-modal:popover-open {
-    display: flex;
-}
-
-.project-delete-modal__backdrop {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-    padding: 0;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(4px);
-    cursor: default;
-}
-
-.project-delete-modal__content {
-    position: relative;
-    z-index: 1;
-    width: min(100%, 480px);
-    padding: 1.75rem;
-    background: var(--card-bg);
-    border: 1px solid var(--purple-line);
-    border-radius: var(--radius);
-    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.6);
-    color: var(--ink);
-}
-
-.project-delete-modal__content h2 {
-    margin: 0 0 0.75rem;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--ink);
-}
-
-.project-delete-modal__content p {
-    color: var(--text-muted);
-    font-size: 0.95rem;
-    line-height: 1.6;
-}
-
-.project-delete-modal__content strong {
-    color: var(--accent);
-}
-
-.project-delete-modal__close {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    border: 0;
-    padding: 0;
-    background: transparent;
-    color: var(--text-muted);
-    font-size: 1.8rem;
-    line-height: 1;
-    cursor: pointer;
-    transition: color 0.2s ease;
-}
-
-.project-delete-modal__close:hover {
-    color: var(--accent);
-}
-
-.project-delete-modal__actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.75rem;
-    margin-top: 1.5rem;
-}
-
-/* ---------- Empty state ---------- */
-.project-grid .empty-state {
-    grid-column: 1 / -1;
     text-align: center;
-    padding: 3rem 1rem;
-    color: var(--text-muted);
-    font-size: 0.95rem;
-}
+  }
 
-/* ---------- Responsive ---------- */
-@media (max-width: 600px) {
-    .project-header {
-        align-items: flex-start;
-        flex-direction: column;
-    }
+  .project-form-modal {
+    align-items: flex-end;
+    padding: 0;
+  }
 
-    .project-add-button {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .project-search {
-        flex-direction: column;
-    }
-
-    .project-search .button {
-        width: 100%;
-    }
-
-    .project-delete-modal {
-        align-items: flex-end;
-        padding: 0;
-    }
-
-    .project-delete-modal__content {
-        width: 100%;
-        padding: 1.25rem;
-        border-radius: var(--radius) var(--radius) 0 0;
-    }
-
-    .project-delete-modal__actions {
-        flex-direction: column-reverse;
-    }
-
-    .project-delete-modal__actions .button {
-        width: 100%;
-        text-align: center;
-    }
-}
-/* ---------- Halaman Form Experience ---------- */
-.experience-form-page {
-    padding: 6rem 1rem;
-    display: flex;
-    justify-content: center;
-}
-
-.experience-form-container {
+  .project-form-modal__content {
     width: 100%;
-    max-width: 640px;
-    padding: 2rem;
-    background: var(--card-bg);
-    border: 1px solid var(--purple-line);
-    border-radius: var(--radius);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-}
+    max-height: 90vh;
+    padding: 1.25rem;
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
 
-.experience-form-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 0.5rem;
-}
+  .project-form-modal__actions {
+    flex-direction: column-reverse;
+  }
 
-.experience-form-subtitle {
-    font-size: 0.875rem;
-    color: var(--text-muted);
-    margin-bottom: 1.75rem;
-    line-height: 1.5;
-}
-
-/* ---------- Form Group ---------- */
-.experience-form .form-group {
-    margin-bottom: 1.25rem;
-}
-
-.experience-form label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    letter-spacing: 0.02em;
-}
-
-.experience-form input[type="text"],
-.experience-form input[type="url"],
-.experience-form input[type="date"],
-.experience-form input[type="datetime-local"],
-.experience-form input[type="email"],
-.experience-form input[type="number"],
-.experience-form textarea,
-.experience-form select {
+  .project-form-modal__actions .button {
     width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--purple-line);
-    border-radius: var(--radius);
-    background: rgba(0, 0, 0, 0.25);
-    color: var(--ink);
-    font-family: inherit;
-    font-size: 0.9rem;
-    transition: border-color 0.2s ease, outline-color 0.2s ease;
+    text-align: center;
+  }
 }
 
-.experience-form input::placeholder,
-.experience-form textarea::placeholder {
-    color: rgba(216, 205, 240, 0.4);
-}
 
-.experience-form input:focus,
-.experience-form textarea:focus,
-.experience-form select:focus {
-    outline: 2px solid var(--purple);
-    border-color: var(--purple);
-}
-
-.experience-form textarea {
-    min-height: 120px;
-    resize: vertical;
-}
-
-/* ---------- Help & Error ---------- */
-.experience-form .form-help {
-    display: block;
-    margin-top: 0.35rem;
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    opacity: 0.75;
-}
-
-.experience-form .form-error {
-    margin-top: 0.35rem;
-    font-size: 0.8rem;
-    color: #f87171;
-    font-weight: 600;
-}
-
-/* ---------- Tombol Aksi ---------- */
-.experience-form .form-actions {
-    display: flex;
-    gap: 0.75rem;
-    margin-top: 1.75rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid rgba(139, 92, 246, 0.2);
-}
-
-.experience-form .button {
-    padding: 0.75rem 1.5rem;
-    font-size: 0.875rem;
-    font-weight: 700;
-    border-radius: var(--radius);
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    transition: all 0.2s ease;
-}
-
-.experience-form .button-primary {
-    background: linear-gradient(to right, var(--accent-dark), var(--accent));
-    color: #0f172a;
-    box-shadow: 0 0 14px rgba(245, 158, 11, 0.3);
-}
-
-.experience-form .button-primary:hover {
-    filter: brightness(1.1);
-    box-shadow: 0 0 22px rgba(245, 158, 11, 0.5);
-}
-
-.experience-form .button-secondary {
-    background: var(--card-bg);
-    border: 1px solid var(--purple-line);
-    color: var(--ink);
-}
-
-.experience-form .button-secondary:hover {
-    background: var(--card-bg-hover);
-    border-color: rgba(167, 139, 250, 0.6);
-}
-
-/* ---------- Responsive ---------- */
+/* =========================================================
+   20. RESPONSIVE — FORM EXPERIENCE
+   ========================================================= */
 @media (max-width: 600px) {
-    .experience-form-page {
-        padding: 4rem 1rem;
-    }
+  .experience-form-page {
+    padding: 4rem 1rem;
+  }
 
-    .experience-form-container {
-        padding: 1.25rem;
-    }
+  .experience-form-container {
+    padding: 1.25rem;
+  }
 
-    .experience-form .form-actions {
-        flex-direction: column;
-    }
+  .experience-form .form-actions {
+    flex-direction: column;
+  }
 
-    .experience-form .button {
-        width: 100%;
-    }
-}
-.star-form {
-    display: inline;
-}
-
-.button-star {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    background: rgba(245, 158, 11, 0.9);
-}
-
-.button-star.is-starred {
-    background:  rgba(245, 158, 11, 0.9);
-}
-
-.star-count {
-    padding: 0.05rem 0.4rem;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.25);
-    font-size: 0.8rem;
-}
-.main-nav .nav-link {
-    color: inherit; /* Mengikuti warna bawaan tema webmu */
-}
-
-/* 2. Hanya ubah warna link "Daftar di sini" / "Login di sini" di bagian bawah form */
-.experience-section p a {
-    color: #ffffff !important; /* Ubah ke #ffffff jika ingin putih bersih */
-    text-decoration: underline;
-}
-
-.experience-section p a:hover {
-    color: #ffc107 !important; /* Berubah jadi kuning/oranye terang saat di-hover mouse */
+  .experience-form .button {
+    width: 100%;
+  }
 }
