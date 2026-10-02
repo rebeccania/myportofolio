@@ -137,4 +137,40 @@ Sumber  :
 https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Server-side/Django/Sessions
 https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Server-side/Django/Forms
 
+# Progress Minggu 5:
+- Mengubah experience.html supaya hanya merender kerangka halaman, sedangkan datanya diambil terpisah lewat fetch() ke endpoint JSON.
+- Merakit JSON pakai JsonResponse biar bisa menyisipkan info star (star_count, is_starred, starred_by_names) yang tidak bisa dilakukan serializers.serialize bawaan Django.
+- Menambahkan field starred_by (ManyToMany ke User) di model, bikin migration baru, dan menambah view toggle_star_experience yang mengembalikan JSON.
+- Menambahkan search by judul experience via AJAX dengan jeda 300ms supaya request cuma dikirim setelah user berhenti mengetik.
+- Mengganti halaman form terpisah jadi modal Popover API yang dibungkus {% if user.is_superuser %} biar cuma muncul buat pemilik portofolio.
+-  Menambahkan view create_experience_ajax yang validasi pakai ExperienceForm dan mengembalikan JSON 201/400/403, serta mengubah delete jadi AJAX biar kartu langsung hilang tanpa reload.
+- Memanfaatkan showToast() dari Tutorial 5 untuk menampilkan notif sukses saat data ditambah/dihapus dan notif error dari pesan validasi server.
+-  Menambahkan escapeHtml() di JavaScript untuk semua nilai yang masuk innerHTML, plus clean_title/clean_description/clean_category dengan strip_tags di form.
+-  Membungkus form dalam card yang center di halaman, mengubah input jadi gelap sesuai tema, dan mengakali autofill Chrome pakai -webkit-box-shadow inset biar field password gak tetep putih.
+
+### Tugas 5:
+
+1. # Jelaskan apa itu debouncing dan mengapa teknik ini penting diterapkan pada fitur pencarian yang menggunakan AJAX!
+
+Debouncing itu adalah teknik untuk menunda eksekusi sebuah fungsi sampai ada jeda waktu tertentu tanpa event baru yang muncul.Caranya dengan membatalkan timer lama (clearTimeout) lalu membuat timer baru (setTimeout) setiap kali user mengetik. Di fitur pencarian AJAX, tanpa debouncing setiap huruf yang diketik langsung memicu fetch(), jadi ngetik "Django" bisa kirim 6 request berturut-turut padahal hasil akhirnya cuma butuh 1. Dengan debouncing 300ms, request baru dikirim setelah user benar-benar berhenti mengetik, sehingga beban server jauh berkurang dan bandwidth lebih hemat. Teknik ini juga mencegah race condition, di mana request lama yang selesai belakangan bisa menimpa hasil pencarian terbaru yang seharusnya ditampilkan. User tetap merasakan pencarian yang responsif karena delaynya cuma sepersekian detik dan tidak terasa mengganggu. Intinya, debouncing itu penting supaya pencarian real-time tetap efisien tanpa mengorbankan pengalaman pengguna.
+
+2. # Jelaskan fungsi dari penggunaan await ketika kita menggunakan fetch()! Apa yang akan terjadi jika kita tidak menggunakan await?
+
+fetch() itu mengembalikan Promise, bukan data langsung, jadi tanpa await variabel response isinya Promise dan saat kita memanggil response.json() akan terjadi error karena Promise tidak punya method tersebut. Keyword await membuat JavaScript menunggu Promise selesai diproses dulu sebelum lanjut ke baris berikutnya. Await hanya bisa dipakai di dalam async function, makanya semua handler seperti fetchProjects() dan addProject() aku deklarasikan dengan keyword async di depannya. Kalau await tidak dipakai, kode setelahnya akan jalan duluan sebelum data datang, sehingga nilai yang mau ditampilkan menjadi undefined atau malah bikin error karena strukturnya belum siap. Ini juga yang bikin kode jadi susah dibaca di zaman sebelum ada async/await, karena harus pakai callback bersarang atau .then() berantai. Jadi kesimpulannya, await berfungsi menjaga urutan eksekusi kode asinkron supaya hasilnya bisa langsung dipakai di baris berikutnya.
+
+3. # Jelaskan apa itu serangan XSS (Cross-Site Scripting) dan mengapa data yang ditampilkan melalui AJAX/JavaScript lebih rentan terhadap serangan ini daripada data yang ditampilkan langsung melalui template Django!
+
+XSS (Cross-Site Scripting) adalah jenis serangan di mana penyerang berhasil menyisipkan kode JavaScript jahat ke halaman web, lalu kode itu dieksekusi di browser korban  misalnya <img src="x" onerror="alert('XSS!')"> yang otomatis trigger alert saat gambarnya gagal dimuat. Di template Django, setiap variabel yang ditampilkan lewat {{ variabel }} otomatis diescape oleh fitur auto-escaping bawaan, jadi karakter seperti <, >, &, dan " diubah jadi entity HTML (&lt;, &gt;, dst) dan browser menampilkannya sebagai teks biasa, bukan tag aktif. Perlindungan itu hilang begitu kita pindah ke AJAX, karena data JSON disusun pakai template literal (backtick) lalu dimasukkan ke DOM lewat innerHTML, dan innerHTML menerjemahkan string sebagai HTML sungguhan. Django tidak bisa membantu lagi di titik ini karena datanya sudah keluar dari template engine dan sampai di browser sebagai string mentah. Makanya saya menambahkan fungsi escapeHtml() di JavaScript untuk membungkus setiap nilai teks yang masuk ke innerHTML, plus method clean_title, clean_description, dan clean_category dengan strip_tags di ExperienceForm sebagai lapisan kedua di sisi server. Dua lapisan ini disebut defense in depth , kalau satu lapis kebobolan, masih ada lapis lainnya yang menahan.
+
+AI Disclosure : Dalam ngerjain Tugas 5 ini, saya memanfaatkan AI buat bantu memahami pola AJAX end-to-end yang harus diterapin ke halaman Experience mulai dari nyusun endpoint JSON pake JsonResponse, ngatur modal form pakai Popover API, sampe ngehandle CSRF token di request fetch(). AI juga bantu ngejelasin konsep-konsep yang agak tricky kayak debouncing, AbortController buat ngecancel request lama, dan cara ngeescape HTML biar aman dari XSS.Beberapa hal yang saya temukan dan selesaikan sendiri:Sempat error ImportError: cannot import name 'delete_project' pas nambahin create_experience_ajax di urls.py. Ternyata fungsi delete_project kehapus pas saya rewrite views.py. Saya cek satu-satu pakai findstr di terminal, terus tambahin balik fungsi yang ilang. Sekalian saya rapihin import di urls.py jadi multi-line biar kalau ada yang salah lebih gampang keliatan.
+Tombol "Tambah Project" awalnya turun ke baris baru, gak sejajar sama "Test Toast". Ternyata karena tombolnya ditaruh di luar <div class="project-header">. Saya perbaiki dengan mindahin ke dalam wrapper .project-header__actions biar dua tombolnya nempel di kanan.
+Field password di halaman login sempet tetep putih walaupun udah dikasih CSS. Setelah buka DevTools → Inspect, ternyata Chrome autofill ngeoverride background pakai -webkit-autofill. Solusinya pake -webkit-box-shadow: 0 0 0 1000px ... inset yang cuma bisa di-override sama cara itu.
+
+Sumber :
+https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API
+https://www.django-rest-framework.org/topics/ajax-csrf-cors/
+
+
+
 
