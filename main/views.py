@@ -42,6 +42,7 @@ def show_experience(request):
         "full_name": "Rebeccaniaga Napitupulu",
         "experience_list": Experience.objects.all(),
         "is_editor": is_editor,
+        "form": ExperienceForm(),
     }
     return render(request, "experience.html", context)
 
@@ -219,18 +220,57 @@ def edit_experience(request, id):
 @login_required(login_url="/login/")
 def delete_experience(request, id):
     experience = get_object_or_404(Experience, pk=id)
+
     if not request.user.is_superuser:
-        raise PermissionDenied
-    
-    experience.delete()
-    messages.success(request, "Pengalaman berhasil dihapus!")
-    return redirect("main:show_experience")
+        return JsonResponse(
+            {"success": False, "message": "Hanya pemilik portofolio yang dapat menghapus pengalaman."},
+            status=403,
+        )
+
+    if request.method == "POST":
+        experience.delete()
+        return JsonResponse({"success": True, "message": "Pengalaman berhasil dihapus!"})
+
+    return JsonResponse({"success": False, "error": "Method not allowed"}, status=405)
 
 # --- JSON DATA DELIVERY ---
 def get_experience_json(request):
-    experience_list = Experience.objects.all()
-    experience_json = serializers.serialize("json", experience_list)
-    return HttpResponse(experience_json, content_type="application/json")
+    title_query = request.GET.get("title", "").strip()
+    experiences = Experience.objects.prefetch_related("starred_by").all()
+
+    if title_query:
+        experiences = experiences.filter(title__icontains=title_query)
+
+    data = []
+    for exp in experiences:
+        starred_users = exp.starred_by.all()
+
+        is_starred = (
+            request.user in starred_users
+            if request.user.is_authenticated
+            else False
+        )
+
+        starred_by_names = ", ".join(u.username for u in starred_users)
+
+        data.append({
+            "pk": str(exp.id),
+            "fields": {
+                "title": exp.title,
+                "description": exp.description,
+                "category": exp.category,
+                "thumbnail": exp.thumbnail or "",
+                "started_at": exp.started_at.isoformat() if exp.started_at else "",
+                "ended_at": exp.ended_at.isoformat() if exp.ended_at else "",
+                "is_ongoing": exp.is_ongoing,
+                # ⭐ Info star
+                "star_count": starred_users.count(),
+                "is_starred": is_starred,
+                "starred_by_names": starred_by_names,
+            }
+        })
+
+    return JsonResponse(data, safe=False)
 
 def login_user(request):
     form = AuthenticationForm(request, data=request.POST or None)
@@ -289,6 +329,28 @@ def toggle_star(request, project_id):
 
     return JsonResponse({"error": "Method not allowed"}, status=405)
 
+@login_required(login_url="/login/")
+def toggle_star_experience(request, experience_id):
+    experience = get_object_or_404(Experience, pk=experience_id)
+
+    if request.method == "POST":
+        if request.user in experience.starred_by.all():
+            experience.starred_by.remove(request.user)
+            is_starred = False
+        else:
+            experience.starred_by.add(request.user)
+            is_starred = True
+
+        starred_users = experience.starred_by.all()
+
+        return JsonResponse({
+            "is_starred": is_starred,
+            "star_count": starred_users.count(),
+            "starred_by_names": ", ".join(u.username for u in starred_users),
+        })
+
+    return JsonResponse({"error": "Method not allowed"}, status=405)
+
 @require_POST
 def create_project_ajax(request):
     if not request.user.is_superuser:
@@ -302,6 +364,24 @@ def create_project_ajax(request):
         project = form.save()
         return JsonResponse(
             {"message": "Proyek berhasil ditambahkan.", "pk": str(project.id)},
+            status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_values()}, status=400)
+
+@require_POST
+def create_experience_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Hanya pemilik portofolio yang dapat menambahkan pengalaman."},
+            status=403,
+        )
+
+    form = ExperienceForm(request.POST)
+    if form.is_valid():
+        experience = form.save()
+        return JsonResponse(
+            {"message": "Pengalaman berhasil ditambahkan.", "pk": str(experience.id)},
             status=201,
         )
 
