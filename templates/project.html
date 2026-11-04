@@ -6,75 +6,409 @@
 
 {% block content %}
 
-   <main>
-    <section class="experience-section" id="experience" style="padding: 6rem 0;">
-      <div class="container about-header">
-        <span class="about-badge">💼 PROJECTS</span>
-        <h2 class="about-title">Karya yang Saya Bangun</h2>
-        <p class="about-subtitle">Daftar project yang pernah saya kerjakan.</p>
-      </div>
+<main>
+  <section class="experience-section" id="experience" style="padding: 6rem 0;">
+    <div class="container about-header">
+      <span class="about-badge">💼 PROJECTS</span>
+      <h2 class="about-title">Karya yang Saya Bangun</h2>
+      <p class="about-subtitle">Daftar project yang pernah saya kerjakan.</p>
+    </div>
 
-      <div class="container">
-        <div class="project-header">
-          <h1>Projects</h1>
-          <a href="{% url 'main:create_project' %}" class="button project-add-button">
+    <div class="container">
+      <!-- HEADER -->
+      <div class="project-header">
+        <h1>Projects</h1>
+
+        {% if user.is_superuser %}
+          <button type="button"
+                  class="button project-add-button"
+                  popovertarget="add-project-modal">
             <span aria-hidden="true">+</span>
             Tambah Project
-          </a>
-        </div>
-
-        <!-- SEARCH BAR -->
-        <form method="get"
-              action="{% url 'main:show_projects' %}"
-              class="project-search">
-          <input type="search"
-                 name="title"
-                 value="{{ title_query }}"
-                 placeholder="Cari berdasarkan nama proyek"
-                 class="project-search__input"
-                 aria-label="Cari berdasarkan nama proyek">
-          <button type="submit" class="button">Cari</button>
-        </form>
-
-        <div class="experience-grid project-grid">
-          {% for project in project_list %}
-            <article class="experience-card">
-              {% if project.project_image_url %}
-                <img src="{{ project.project_image_url }}"
-                     alt="Gambar {{ project.title }}"
-                     class="project-image">
-              {% endif %}
-
-              <h2>{{ project.title }}</h2>
-              <span class="experience-category">{{ project.tech_stack }}</span>
-              <p class="experience-description">{{ project.description }}</p>
-
-              <div class="project-card-actions">
-                <div class="project-actions">
-                  {% if project.project_url %}
-                    <a href="{{ project.project_url }}" class="button" target="_blank">
-                      Lihat Project
-                    </a>
-                  {% endif %}
-
-                  {% include "components/project_delete_modal.html" with project=project %}
-                </div>
-              </div>
-            </article>
-          {% empty %}
-            {% if title_query %}
-              <p class="empty-state" style="grid-column: 1 / -1; text-align: center; color: var(--text-muted);">
-                Tidak ada project dengan nama "{{ title_query }}".
-              </p>
-            {% else %}
-              <p class="empty-state" style="grid-column: 1 / -1; text-align: center; color: var(--text-muted);">
-                Belum ada project yang ditambahkan.
-              </p>
-            {% endif %}
-          {% endfor %}
-        </div>
+          </button>
+        {% endif %}
       </div>
-    </section>
-  </main>
+
+      <!-- SEARCH BAR (AJAX) -->
+      <form id="project-search-form" class="project-search">
+        <input type="search"
+               id="search-input"
+               name="title"
+               value="{{ title_query }}"
+               placeholder="Cari berdasarkan nama proyek"
+               class="project-search__input"
+               aria-label="Cari berdasarkan nama proyek">
+        <button type="submit" class="button">Cari</button>
+      </form>
+
+      <!-- Loading State -->
+      <div id="loading" class="empty-state hide">
+        <p>Memuat projects...</p>
+      </div>
+
+      <!-- Error State -->
+      <div id="error" class="empty-state hide">
+        <p>Gagal memuat data projects. Silakan coba lagi.</p>
+      </div>
+
+      <!-- Empty State -->
+      <div id="empty" class="empty-state hide">
+        <p>Belum ada proyek yang ditambahkan atau ditemukan.</p>
+      </div>
+
+      <!-- Project Grid (diisi JavaScript) -->
+      <div id="grid" class="experience-grid project-grid hide"></div>
+    </div>
+  </section>
+</main>
+
+{% if user.is_superuser %}
+    {% include "components/project_form_modal.html" %}
+{% endif %}
+{% csrf_token %}
+
+<!-- ============= SCRIPT AJAX ============= -->
+<script>
+// ---------- KONFIGURASI ----------
+const BASE_PROJECTS_ENDPOINT = "{% url 'api:project-list' %}";
+const DETAIL_PROJECT_ENDPOINT = "{% url 'api:project-detail' '00000000-0000-0000-0000-000000000000' %}";
+const STAR_PROJECT_ENDPOINT = "{% url 'api:project-star' '00000000-0000-0000-0000-000000000000' %}";
+
+const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
+const IS_AUTHENTICATED = "{{ user.is_authenticated|yesno:'true,false' }}" === "true";
+
+const loadingState = document.getElementById('loading');
+const errorState = document.getElementById('error');
+const emptyState = document.getElementById('empty');
+const gridContainer = document.getElementById('grid');
+const searchForm = document.getElementById('project-search-form');
+const searchInput = document.getElementById('search-input');
+const projectForm = document.getElementById('project-form');
+
+let projectsAbortController;
+let searchDebounceTimer;
+
+
+// ==================================================
+// UTILITAS
+// ==================================================
+
+function getCookie(name) {
+    const prefix = `${name}=`;
+    const cookie = document.cookie.split(';').map(value => value.trim())
+        .find(value => value.startsWith(prefix));
+
+    return cookie ? decodeURIComponent(cookie.slice(prefix.length)) : null;
+}
+
+
+function escapeHtml(value) {
+    return String(value ?? '').replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+}
+
+
+function projectEndpoint(pattern, id) {
+    return pattern.replace(
+        '00000000-0000-0000-0000-000000000000',
+        id
+    );
+}
+
+
+function displayPageSection({
+    showLoading = false,
+    showError = false,
+    showEmpty = false,
+    showGrid = false
+}) {
+    loadingState.classList.toggle('hide', !showLoading);
+    errorState.classList.toggle('hide', !showError);
+    emptyState.classList.toggle('hide', !showEmpty);
+    gridContainer.classList.toggle('hide', !showGrid);
+}
+
+
+// ==================================================
+// MEMBUAT CARD PROJECT
+// ==================================================
+
+function buildProjectCardElement(project) {
+    const article = document.createElement('article');
+    article.className = 'experience-card';
+
+    const image = project.project_image_url
+        ? `<img src="${escapeHtml(project.project_image_url)}"
+                alt="${escapeHtml(project.title)}"
+                class="project-image">`
+        : '';
+
+    const link = project.project_url
+        ? `<a href="${escapeHtml(project.project_url)}"
+              class="button"
+              target="_blank"
+              rel="noopener noreferrer">Open project</a>`
+        : '';
+
+    const star = IS_AUTHENTICATED
+        ? `<button type="button"
+                   class="button button-star${project.is_starred ? ' is-starred' : ''}"
+                   data-action="star"
+                   data-id="${escapeHtml(project.id)}"
+                   title="${escapeHtml(project.starred_by_names)}">
+               ${project.is_starred ? 'Unstar' : 'Star'} (${project.star_count})
+           </button>`
+        : `<a href="{% url 'main:login' %}" class="button">
+               Login to star (${project.star_count})
+           </a>`;
+
+    const remove = IS_SUPERUSER
+        ? `<button type="button"
+                   class="button button-danger"
+                   data-action="delete"
+                   data-id="${escapeHtml(project.id)}">Delete</button>`
+        : '';
+
+    article.innerHTML = `
+        ${image}
+        <h2>${escapeHtml(project.title)}</h2>
+        <span class="experience-category">${escapeHtml(project.tech_stack)}</span>
+        <p class="experience-description">${escapeHtml(project.description)}</p>
+        <div class="project-card-actions">
+            <div class="project-actions">
+                ${link}${star}${remove}
+            </div>
+        </div>
+    `;
+
+    return article;
+}
+
+
+// ==================================================
+// MENGAMBIL DATA PROJECT (GET)
+// ==================================================
+
+async function fetchProjects(searchQuery = '') {
+    if (projectsAbortController) {
+        projectsAbortController.abort();
+    }
+
+    projectsAbortController = new AbortController();
+
+    try {
+        displayPageSection({ showLoading: true });
+
+        const url = new URL(
+            BASE_PROJECTS_ENDPOINT,
+            window.location.origin
+        );
+
+        if (searchQuery) {
+            url.searchParams.set('title', searchQuery);
+        }
+
+        const response = await fetch(url, {
+            headers: {
+                Accept: 'application/json'
+            },
+            signal: projectsAbortController.signal,
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const projects = await response.json();
+
+        gridContainer.replaceChildren(
+            ...projects.map(buildProjectCardElement)
+        );
+
+        displayPageSection({
+            showGrid: projects.length > 0,
+            showEmpty: projects.length === 0
+        });
+
+    } catch (error) {
+        if (error.name === 'AbortError') return;
+
+        console.error(error);
+        displayPageSection({ showError: true });
+    }
+}
+
+
+// ==================================================
+// MENANGANI ERROR API
+// ==================================================
+
+function apiErrorMessage(data, status) {
+    const messages = Object.values(data)
+        .flat()
+        .filter(value => typeof value === 'string');
+
+    return messages.join(' ') || `Request failed (HTTP ${status}).`;
+}
+
+
+// ==================================================
+// FUNGSI REQUEST POST, PATCH, DELETE
+// ==================================================
+
+async function writeProject(url, method, payload) {
+    const response = await fetch(url, {
+        method,
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: payload === undefined
+            ? undefined
+            : JSON.stringify(payload),
+    });
+
+    if (response.status === 204) return null;
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+        throw new Error(apiErrorMessage(data, response.status));
+    }
+
+    return data;
+}
+
+
+// ==================================================
+// MENAMBAHKAN PROJECT (POST)
+// ==================================================
+
+async function addProject(event) {
+    event.preventDefault();
+
+    const button = projectForm.querySelector('button[type="submit"]');
+    button.disabled = true;
+
+    try {
+        const fields = new FormData(projectForm);
+
+        const payload = Object.fromEntries([
+            'title',
+            'description',
+            'tech_stack',
+            'project_url',
+            'project_image_url',
+        ].map(name => [name, fields.get(name)]));
+
+        await writeProject(
+            BASE_PROJECTS_ENDPOINT,
+            'POST',
+            payload
+        );
+
+        projectForm.reset();
+        document.getElementById('add-project-modal').hidePopover();
+
+        showToast('Success', 'Project created.', 'success');
+
+        await fetchProjects(searchInput.value.trim());
+
+    } catch (error) {
+        showToast(
+            'Could not create project',
+            error.message,
+            'error'
+        );
+
+    } finally {
+        button.disabled = false;
+    }
+}
+
+if (projectForm) {
+    projectForm.addEventListener('submit', addProject);
+}
+
+
+// ==================================================
+// EVENT STAR DAN DELETE
+// ==================================================
+
+gridContainer.addEventListener('click', async function(event) {
+    const button = event.target.closest('button[data-action]');
+
+    if (!button || button.disabled) return;
+
+    const action = button.dataset.action;
+
+    if (
+        action === 'delete' &&
+        !window.confirm('Delete this project?')
+    ) {
+        return;
+    }
+
+    button.disabled = true;
+
+    try {
+        const pattern = action === 'star'
+            ? STAR_PROJECT_ENDPOINT
+            : DETAIL_PROJECT_ENDPOINT;
+
+        await writeProject(
+            projectEndpoint(pattern, button.dataset.id),
+            action === 'star' ? 'POST' : 'DELETE'
+        );
+
+        showToast(
+            'Success',
+            action === 'star' ? 'Star updated.' : 'Project deleted.',
+            'success'
+        );
+
+        await fetchProjects(searchInput.value.trim());
+
+    } catch (error) {
+        showToast('Request failed', error.message, 'error');
+
+    } finally {
+        button.disabled = false;
+    }
+});
+
+
+// ==================================================
+// PENCARIAN PROJECT
+// ==================================================
+
+searchInput.addEventListener('input', function() {
+    clearTimeout(searchDebounceTimer);
+
+    searchDebounceTimer = setTimeout(
+        () => fetchProjects(searchInput.value.trim()),
+        300
+    );
+});
+
+
+searchForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    clearTimeout(searchDebounceTimer);
+
+    fetchProjects(searchInput.value.trim());
+});
+
+
+// ==================================================
+// MENJALANKAN FETCH SAAT HALAMAN DIBUKA
+// ==================================================
+
+fetchProjects(searchInput.value.trim());
+
+</script>
 
 {% endblock content %}
