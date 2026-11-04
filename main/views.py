@@ -1,17 +1,24 @@
+import datetime
 from django.contrib import messages
 from django.core import serializers
-from django.http import HttpResponse
+from django.http import HttpResponse ,JsonResponse
+from django.contrib.auth import login,logout
+from django.contrib.auth.forms import AuthenticationForm,UserCreationForm
 from django.shortcuts import redirect, render
 from django.shortcuts import get_object_or_404
-from main.forms import ProjectForm
-
+from main.forms import ProjectForm,ExperienceForm
+from django.contrib.auth.decorators import login_required  # Tambahkan baris ini
+from django.core.exceptions import PermissionDenied        # Tambahkan baris ini
 from main.models import Experience
 from main.models import Education
 from main.models import AboutTrait
 from main.models import Project
+from main.forms import ProjectForm
+from django.views.decorators.http import require_POST
 
 # Create your views here.
 def show_main(request):
+    last_login = request.COOKIES.get('last_login', 'Belum ada sesi login / Cookie tidak ditemukan')
     context = {
         "name": "Rebeccaniaga Napitupulu",
         'short_name': "Rebecca",
@@ -23,15 +30,19 @@ def show_main(request):
             "I'm interested in Product, Data, and Marketing, and passionate about exploring how technology and data can be turned into meaningful solutions."
             " I'm always eager to learn, grow, and build impactful IT solutions for the future."
         ),
+        "last_login": last_login,
     }
     return render(request, "index.html", context)
 
 
 def show_experience(request):
+    is_editor = request.user.is_authenticated and request.user.groups.filter(name='Editor').exists()
     context = {
         'short_name': "Rebecca",
         "full_name": "Rebeccaniaga Napitupulu",
         "experience_list": Experience.objects.all(),
+        "is_editor": is_editor,
+        "form": ExperienceForm(),
     }
     return render(request, "experience.html", context)
 
@@ -53,7 +64,11 @@ def show_about(request):
     }
     return render(request, 'about.html', context)
 
+@login_required(login_url="/login/")
 def create_project(request):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+
     form = ProjectForm(request.POST or None)
 
     if request.method == "POST" and form.is_valid():
@@ -69,29 +84,305 @@ def create_project(request):
     return render(request, "projects_form.html", context)
 
 def show_projects(request):
+    is_editor = (
+        request.user.is_authenticated
+        and request.user.groups.filter(name="Editor").exists()
+    )
+
+    title_query = request.GET.get("title", "").strip()
+
     context = {
         "short_name": "Rebecca",
         "full_name": "Rebeccaniaga Napitupulu",
-        "project_list": Project.objects.all(),
+        "title_query": title_query,
+        "is_editor": is_editor,
+        "form" : ProjectForm(),
     }
+
     return render(request, "project.html", context)
 
 def get_projects_json(request):
     title_query = request.GET.get("title", "").strip()
-    projects = Project.objects.all()
+    projects = Project.objects.prefetch_related("starred_by").all()
 
     if title_query:
         projects = projects.filter(title__icontains=title_query)
 
-    projects_json = serializers.serialize("json", projects)
-    return HttpResponse(projects_json, content_type="application/json")
+    data =[]
 
+    for project in projects:
+        starred_users = project.starred_by.all()
+
+        is_starred = (
+            request.user in starred_users
+            if request.user.is_authenticated
+            else False
+        )
+
+        starred_by_names = ", ".join(
+            [user.username for user in starred_users]
+        )
+
+        data.append({
+            "pk": str(project.id),
+            "fields": {
+                "title": project.title,
+                "description": project.description,
+                "tech_stack": project.tech_stack,
+                "project_url": project.project_url,
+                "project_image_url": project.project_image_url,
+                "star_count": starred_users.count(),
+                "is_starred": is_starred,
+                "starred_by_names": starred_by_names,
+            }
+        })
+
+    return JsonResponse(data, safe=False)
+
+@login_required(login_url="/login/")
 def delete_project(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
 
+    if not request.user.is_superuser:
+        raise PermissionDenied
+
     if request.method == "POST":
         project.delete()
-        messages.success(request, "Project berhasil dihapus!")
+        return JsonResponse({"success": True, "message": "Project berhasil dihapus!"})
+
+    return JsonResponse({"error": "Method not allowed"}, status=405)
+
+@login_required(login_url="/login/")
+def edit_project(request, id):
+    project = get_object_or_404(Project, pk=id)
+    
+    is_editor = request.user.groups.filter(name='Editor').exists()
+    if not (request.user.is_superuser or is_editor):
+        raise PermissionDenied
+
+    form = ProjectForm(request.POST or None, instance=project)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Proyek berhasil diperbarui!")
         return redirect("main:show_projects")
 
-    return redirect("main:show_projects")
+    context = {
+        "short_name": "Rebecca",
+        "full_name": "Rebeccaniaga Napitupulu",
+        "form": form,
+    }
+    return render(request, "projects_form.html", context)
+
+# --- CREATE EXPERIENCE ---
+@login_required(login_url="/login/")
+def create_experience(request):
+    form = ExperienceForm(request.POST or None)
+    if not request.user.is_superuser:
+        raise PermissionDenied
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Pengalaman baru berhasil ditambahkan!")
+        return redirect("main:show_experience")
+
+    context = {
+        "short_name": "Rebecca",
+        "full_name": "Rebeccaniaga Napitupulu",
+        "form": form,
+    }
+    return render(request, "experience_form.html", context)
+
+# --- UPDATE EXPERIENCE ---
+@login_required(login_url="/login/")
+def edit_experience(request, id):
+    experience = get_object_or_404(Experience, pk=id)
+
+    is_editor = request.user.groups.filter(name='Editor').exists()
+    if not (request.user.is_superuser or is_editor):
+        raise PermissionDenied
+        
+    form = ExperienceForm(request.POST or None, instance=experience)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Pengalaman berhasil diperbarui!")
+        return redirect("main:show_experience")
+
+    context = {
+        "short_name": "Rebecca",
+        "full_name": "Rebeccaniaga Napitupulu",
+        "form": form,
+    }
+    return render(request, "experience_form.html", context)
+
+# --- DELETE EXPERIENCE ---
+@login_required(login_url="/login/")
+def delete_experience(request, id):
+    experience = get_object_or_404(Experience, pk=id)
+
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"success": False, "message": "Hanya pemilik portofolio yang dapat menghapus pengalaman."},
+            status=403,
+        )
+
+    if request.method == "POST":
+        experience.delete()
+        return JsonResponse({"success": True, "message": "Pengalaman berhasil dihapus!"})
+
+    return JsonResponse({"success": False, "error": "Method not allowed"}, status=405)
+
+# --- JSON DATA DELIVERY ---
+def get_experience_json(request):
+    title_query = request.GET.get("title", "").strip()
+    experiences = Experience.objects.prefetch_related("starred_by").all()
+
+    if title_query:
+        experiences = experiences.filter(title__icontains=title_query)
+
+    data = []
+    for exp in experiences:
+        starred_users = exp.starred_by.all()
+
+        is_starred = (
+            request.user in starred_users
+            if request.user.is_authenticated
+            else False
+        )
+
+        starred_by_names = ", ".join(u.username for u in starred_users)
+
+        data.append({
+            "pk": str(exp.id),
+            "fields": {
+                "title": exp.title,
+                "description": exp.description,
+                "category": exp.category,
+                "thumbnail": exp.thumbnail or "",
+                "started_at": exp.started_at.isoformat() if exp.started_at else "",
+                "ended_at": exp.ended_at.isoformat() if exp.ended_at else "",
+                "is_ongoing": exp.is_ongoing,
+                # ⭐ Info star
+                "star_count": starred_users.count(),
+                "is_starred": is_starred,
+                "starred_by_names": starred_by_names,
+            }
+        })
+
+    return JsonResponse(data, safe=False)
+
+def login_user(request):
+    form = AuthenticationForm(request, data=request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        user = form.get_user()
+        login(request, user)
+        response = redirect("main:show_main")
+        response.set_cookie('last_login', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        return response
+
+    context = {
+        "name": "Rebeccaniaga Napitupulu",
+        "form": form,
+    }
+    return render(request, "login.html", context)
+
+def register(request):
+    form = UserCreationForm(request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Akun berhasil dibuat. Silakan login.")
+        return redirect("main:login")
+
+    context = {
+        "name": "Rebeccaniaga Napitupulu",
+        "form": form,
+    }
+    return render(request, "register.html", context)
+
+def logout_user(request):
+    logout(request)
+    return redirect("main:show_main")
+
+# Tanpa cek is_superuser: semua akun yang sudah login boleh memberi star
+@login_required(login_url="/login/")
+def toggle_star(request, project_id):
+    project = get_object_or_404(Project, pk=project_id)
+
+    if request.method == "POST":
+        if request.user in project.starred_by.all():
+            project.starred_by.remove(request.user)
+            is_starred = False
+        else:
+            project.starred_by.add(request.user)
+            is_starred = True
+
+        starred_users = project.starred_by.all()
+
+        return JsonResponse({
+            "is_starred": is_starred,
+            "star_count": starred_users.count(),
+            "starred_by_names": ", ".join(u.username for u in starred_users),
+        })
+
+    return JsonResponse({"error": "Method not allowed"}, status=405)
+
+@login_required(login_url="/login/")
+def toggle_star_experience(request, experience_id):
+    experience = get_object_or_404(Experience, pk=experience_id)
+
+    if request.method == "POST":
+        if request.user in experience.starred_by.all():
+            experience.starred_by.remove(request.user)
+            is_starred = False
+        else:
+            experience.starred_by.add(request.user)
+            is_starred = True
+
+        starred_users = experience.starred_by.all()
+
+        return JsonResponse({
+            "is_starred": is_starred,
+            "star_count": starred_users.count(),
+            "starred_by_names": ", ".join(u.username for u in starred_users),
+        })
+
+    return JsonResponse({"error": "Method not allowed"}, status=405)
+
+@require_POST
+def create_project_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Hanya pemilik portofolio yang dapat menambahkan proyek."},
+            status=403,
+        )
+
+    form = ProjectForm(request.POST)
+    if form.is_valid():
+        project = form.save()
+        return JsonResponse(
+            {"message": "Proyek berhasil ditambahkan.", "pk": str(project.id)},
+            status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_values()}, status=400)
+
+@require_POST
+def create_experience_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Hanya pemilik portofolio yang dapat menambahkan pengalaman."},
+            status=403,
+        )
+
+    form = ExperienceForm(request.POST)
+    if form.is_valid():
+        experience = form.save()
+        return JsonResponse(
+            {"message": "Pengalaman berhasil ditambahkan.", "pk": str(experience.id)},
+            status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_values()}, status=400)

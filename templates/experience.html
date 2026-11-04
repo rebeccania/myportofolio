@@ -5,7 +5,6 @@
 {% block nav_experience %}active{% endblock %}
 
 {% block content %}
-
 <main>
   <section class="experience-section" id="experience" style="padding: 6rem 0;">
     <div class="container about-header">
@@ -19,14 +18,21 @@
       <div class="project-header">
         <h1>Experience</h1>
 
-        {% if user.is_superuser %}
+        <div class="project-header__actions">
+          <button class="button button-secondary"
+                  onclick="showToast('Notifikasi Sistem', 'Experience berhasil dimuat!', 'success')">
+            Test Toast Notifikasi
+          </button>
+
+          {% if user.is_superuser %}
           <button type="button"
                   class="button project-add-button"
                   popovertarget="add-experience-modal">
             <span aria-hidden="true">+</span>
-            Tambah Experience
+            Tambah Pengalaman
           </button>
-        {% endif %}
+          {% endif %}
+        </div>
       </div>
 
       <!-- SEARCH BAR (AJAX) -->
@@ -34,7 +40,7 @@
         <input type="search"
                id="search-input"
                name="title"
-               value=""
+               value="{{ title_query }}"
                placeholder="Cari berdasarkan nama pengalaman"
                class="project-search__input"
                aria-label="Cari berdasarkan nama pengalaman">
@@ -53,7 +59,7 @@
 
       <!-- Empty State -->
       <div id="empty" class="empty-state hide">
-        <p>Belum ada pengalaman yang ditambahkan.</p>
+        <p>Belum ada pengalaman yang ditambahkan atau ditemukan.</p>
       </div>
 
       <!-- Experience Grid (diisi JavaScript) -->
