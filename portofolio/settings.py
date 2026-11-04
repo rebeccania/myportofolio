@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -153,3 +154,5 @@ MAILERS = {
 }
 
 CSRF_TRUSTED_ORIGINS = ["https://rebeccaniaga-napitupulu-myportofolio.pws.cs.ui.ac.id"]
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
