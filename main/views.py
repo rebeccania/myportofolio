@@ -42,6 +42,7 @@ def show_experience(request):
         "full_name": "Rebeccaniaga Napitupulu",
         "experience_list": Experience.objects.all(),
         "is_editor": is_editor,
+        "edit_form": ExperienceForm(auto_id="edit_%s"),
         "form": ExperienceForm(),
     }
     return render(request, "experience.html", context)
@@ -97,6 +98,7 @@ def show_projects(request):
         "title_query": title_query,
         "is_editor": is_editor,
         "form" : ProjectForm(),
+        "edit_form": ProjectForm(auto_id="edit_%s"),
     }
 
     return render(request, "project.html", context)
